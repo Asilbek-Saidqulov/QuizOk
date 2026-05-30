@@ -170,10 +170,15 @@ app.get('/api/stats', authMiddleware, async (req, res) => {
 // Quiz o'chirish
 app.delete('/api/quiz/:id', authMiddleware, async (req, res) => {
   const { id } = req.params;
- 
+  const { data: quiz } = await supabase
+    .from('quizzes').select('teacher_id').eq('id', id).single();
+  if (!quiz) return res.status(404).json({ error: 'Quiz topilmadi' });
+  if (quiz.teacher_id !== req.user.id) return res.status(403).json({ error: 'Ruxsat yo\'q' });
   await supabase.from('questions').delete().eq('quiz_id', id);
+  await supabase.from('answers').delete().eq('session_id',
+    supabase.from('sessions').select('id').eq('quiz_id', id)
+  );
   const { error } = await supabase.from('quizzes').delete().eq('id', id);
- 
   if (error) return res.status(500).json({ error: error.message });
   res.json({ success: true });
 });
