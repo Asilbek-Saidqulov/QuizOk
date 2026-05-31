@@ -1,10 +1,9 @@
 const path = require('path');
+const https = require('https');
 
 require('dotenv').config({
   path: path.resolve(__dirname, '.env')
 });
-
-console.log('ENV TEST:', process.env.JWT_SECRET);
 
 const express = require('express');
 const http = require('http');
@@ -174,10 +173,19 @@ app.delete('/api/quiz/:id', authMiddleware, async (req, res) => {
     .from('quizzes').select('teacher_id').eq('id', id).single();
   if (!quiz) return res.status(404).json({ error: 'Quiz topilmadi' });
   if (quiz.teacher_id !== req.user.id) return res.status(403).json({ error: 'Ruxsat yo\'q' });
+  // Avval bog'liq ma'lumotlarni o'chirish
   await supabase.from('questions').delete().eq('quiz_id', id);
-  await supabase.from('answers').delete().eq('session_id',
-    supabase.from('sessions').select('id').eq('quiz_id', id)
-  );
+
+  const { data: sessions } = await supabase
+    .from('sessions').select('id').eq('quiz_id', id);
+
+  if (sessions && sessions.length > 0) {
+    const sessionIds = sessions.map(s => s.id);
+    await supabase.from('answers').delete().in('session_id', sessionIds);
+    await supabase.from('players').delete().in('session_id', sessionIds);
+    await supabase.from('sessions').delete().in('id', sessionIds);
+  }
+
   const { error } = await supabase.from('quizzes').delete().eq('id', id);
   if (error) return res.status(500).json({ error: error.message });
   res.json({ success: true });
@@ -580,7 +588,128 @@ function endGame(code) {
  
   console.log(`O'yin ${code} tugadi`);
 }
- 
+
+// ===== USER PASSWORD =====
+app.patch('/api/user/password', authMiddleware, async (req, res) => {
+  const { old_password, new_password } = req.body;
+  if (!old_password || !new_password) {
+    return res.status(400).json({ error: 'Parollarni kiriting' });
+  }
+  if (new_password.length < 6) {
+    return res.status(400).json({ error: 'Yangi parol kamida 6 ta belgi' });
+  }
+
+  try {
+    const { createClient: createSupabaseClient } = require('@supabase/supabase-js');
+    // Avval eski parol bilan login qilib tekshiramiz
+    const tempClient = createSupabaseClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+    const { error: signInError } = await tempClient.auth.signInWithPassword({
+      email: req.user.email,
+      password: old_password
+    });
+    if (signInError) {
+      return res.status(401).json({ error: "Joriy parol noto'g'ri" });
+    }
+
+    // Parolni yangilash
+    const { error: updateError } = await supabase.auth.admin
+      ? await supabase.auth.admin.updateUserById(req.user.id, { password: new_password })
+      : { error: { message: 'Admin API mavjud emas' } };
+
+    if (updateError) {
+      // Fallback: user o'zi update qilsin
+      const { error: userUpdateError } = await tempClient.auth.updateUser({
+        password: new_password
+      });
+      if (userUpdateError) return res.status(500).json({ error: userUpdateError.message });
+    }
+
+    res.json({ success: true });
+  } catch (e) {
+    console.error('Password change error:', e);
+    res.status(500).json({ error: 'Server xatosi' });
+  }
+});
+
+// ===== GEMINI AI =====
+
+app.post('/api/ai/generate', async (req, res) => {
+  const { text, imageBase64, count = 10 } = req.body;
+  
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) return res.status(500).json({ error: 'Gemini API key yo\'q' });
+
+  const prompt = `Sen o'zbek tili bilimdon o'qituvchisan. Quyidagi matn asosida ${count} ta test savoli tuz. 
+Har bir savolda 4 ta variant bo'lsin (A, B, C, D), faqat bittasi to'g'ri.
+FAQAT JSON qaytargil, boshqa hech narsa yozma, markdown ham yozma.
+Format: [{"question":"...","options":["...","...","...","..."],"correct":0}]
+Matn: ${(text || '').substring(0, 4000)}`;
+
+  try {
+    let requestBody;
+
+    if (imageBase64) {
+      requestBody = {
+        contents: [{
+          parts: [
+            { text: `Rasmda ko'rsatilgan matn asosida ${count} ta test savoli tuz. FAQAT JSON: [{"question":"...","options":["...","...","...","..."],"correct":0}]` },
+            { inline_data: { mime_type: 'image/jpeg', data: imageBase64 } }
+          ]
+        }]
+      };
+    } else {
+      requestBody = {
+        contents: [{ parts: [{ text: prompt }] }]
+      };
+    }
+
+    const bodyStr = JSON.stringify(requestBody);
+
+    const options = {
+      hostname: 'generativelanguage.googleapis.com',
+      path: `/v1beta/models/gemini-3.5-flash:generateContent`,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-goog-api-key': apiKey,          // ← o'zgartiring
+        'Content-Length': Buffer.byteLength(bodyStr)
+      }
+    };
+
+    const geminiReq = https.request(options, (geminiRes) => {
+      let data = '';
+      geminiRes.on('data', chunk => data += chunk);
+      geminiRes.on('end', () => {
+        try {
+          const parsed = JSON.parse(data);
+          const rawText = parsed?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+          const clean = rawText.replace(/```json|```/g, '').trim();
+          const questions = JSON.parse(clean);
+          res.json({ questions });
+        } catch (e) {
+          console.error('Gemini parse error:', e, data);
+          res.status(500).json({ error: 'AI javobini o\'qib bo\'lmadi' });
+        }
+      });
+    });
+
+    geminiReq.on('error', (e) => {
+      console.error('Gemini request error:', e);
+      res.status(500).json({ error: 'Gemini bilan bog\'lanishda xatolik' });
+    });
+
+    geminiReq.write(bodyStr);
+    geminiReq.end();
+
+  } catch (e) {
+    console.error('Gemini error:', e);
+    res.status(500).json({ error: 'Server xatosi' });
+  }
+});
+
 // ===== SERVER START =====
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {

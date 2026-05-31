@@ -107,7 +107,13 @@ body::after{
    SCREENS
 ============================================================ */
 .screen{display:none;position:relative;z-index:1;min-height:100vh}
-.screen.active{display:flex;flex-direction:column}
+#landing{background:transparent}
+#home,#teacher,#lobby,#join,#student-wait,#game-teacher,#game-student,
+#scores,#student-end,#my-quizzes,#stats,#settings,#profile-page{
+  background:rgba(6,6,16,0.82);backdrop-filter:blur(0px);
+}
+.screen.active{display:flex;flex-direction:column;animation:screenIn .35s cubic-bezier(.4,0,.2,1)}
+@keyframes screenIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
 /* ============================================================
    SHARED COMPONENTS
@@ -760,7 +766,7 @@ select.inp{cursor:pointer}
 .lobby-share:hover{border-color:rgba(0,229,195,.4)}
 .players-box{max-width:560px;width:100%;margin-bottom:32px}
 .players-count{font-size:13px;color:var(--t3);margin-bottom:12px}
-.players-grid{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;min-height:48px}
+.players-grid{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;min-height:48px;max-height:200px;overflow-y:auto}
 .p-chip{
   background:var(--s1);border:1px solid var(--bd);
   border-radius:40px;padding:7px 16px;font-size:14px;font-weight:500;
@@ -786,6 +792,9 @@ select.inp{cursor:pointer}
   letter-spacing:10px;text-align:center;
   border:2px solid var(--bd)!important;border-radius:20px!important;padding:18px!important;
   margin-bottom:12px;
+}
+@media(max-width:420px){
+  .code-inp{font-size:32px!important;letter-spacing:6px;height:80px}
 }
 .code-inp:focus{border-color:var(--ai)!important}
 .name-inp{text-align:center;font-size:16px!important}
@@ -831,7 +840,7 @@ select.inp{cursor:pointer}
   border:1px solid rgba(124,108,250,.2);padding:5px 14px;border-radius:20px;
   font-size:12px;font-weight:600;margin-bottom:14px;letter-spacing:1px;text-transform:uppercase;
 }
-.q-big{font-size:24px;font-weight:700;line-height:1.35}
+.q-big{font-size:24px;font-weight:700;line-height:1.35;overflow-y:auto;max-height:180px}
 .ans-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .ans-btn{
   padding:18px;border:2px solid;border-radius:14px;
@@ -1602,8 +1611,8 @@ select.inp{cursor:pointer}
 ============================================================ -->
 <div class="screen" id="join">
   <div class="topbar" style="justify-content:center;position:relative">
-    <div class="topbar-logo">QuizOk</div>
     <button class="btn btn-ghost btn-sm" style="position:absolute;left:24px" onclick="showScreen('home')">← Orqaga</button>
+    <div class="topbar-logo">QuizOk</div>
   </div>
   <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center">
     <div style="font-size:44px;margin-bottom:16px">🎮</div>
@@ -1922,8 +1931,11 @@ let aiGeneratedQs = [];
    UTILS
 ============================================================ */
 function showScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+  const prev = document.querySelector('.screen.active');
+  if(prev) prev.classList.remove('active');
+  const next = document.getElementById(id);
+  next.classList.add('active');
+  window.scrollTo(0,0);
 }
 function showMsg(id,text){
   const el=document.getElementById(id);
@@ -2000,11 +2012,29 @@ function continueAsGuest(){
   document.getElementById('authOverlay').classList.remove('show');
   showScreen('home');updateHomeGreet();
 }
+function checkAuthForAction(action){
+  if(!state.user || state.user.guest){
+    showAuth('login');
+    showToast("Quiz yaratish uchun kirish kerak",'error');
+    return false;
+  }
+  return true;
+}
 function doLogout(){state.user=null;state.token=null;showScreen('landing')}
 function updateHomeGreet(){
-  if(state.user){
-    document.getElementById('homeGreet').textContent='Salom, '+(state.user.name||'Mehmon')+'! 👋';
-    document.getElementById('navUserName').textContent='👤 '+(state.user.name||state.user.email||'Mehmon');
+  if(!state.user) return;
+  const name = state.user.name || state.user.email || 'Mehmon';
+  const el = document.getElementById('homeGreet');
+  if(el) el.textContent = 'Salom, ' + name + '! 👋';
+  const nav = document.getElementById('navUserName');
+  if(nav) nav.textContent = '👤 ' + name;
+  // Quick stats
+  if(state.token){
+    fetch('/api/my-quizzes',{headers:{'Authorization':'Bearer '+state.token}})
+      .then(r=>r.ok?r.json():[]).then(qs=>{
+        const el=document.getElementById('qsQuizzes');
+        if(el) el.textContent=qs.length;
+      }).catch(()=>{});
   }
 }
 
@@ -2344,6 +2374,7 @@ function updateQuestion(i){
    SESSION
 ============================================================ */
 async function createSession(){
+  if(!checkAuthForAction()) return;
   const title=document.getElementById('quizTitle').value.trim();
   if(!title)return showMsg('tAiErr','Quiz nomini kiriting');
   if(localQuestions.length<2)return showToast('Kamida 2 ta savol kerak','error');
@@ -2402,6 +2433,7 @@ function answerQ(idx,btn){
    SOCKET EVENTS
 ============================================================ */
 socket.on('player:new',({name,count})=>{
+  try{ QuizokSound.playerJoin(); }catch(e){}
   const grid=document.getElementById('playersGrid');
   const chip=document.createElement('div');chip.className='p-chip';
   const av=['🦊','🐼','🦁','🐸','🦋','🐙','🦄','🐺','🦝','🐯'];
@@ -2413,6 +2445,7 @@ socket.on('player:left',({name,count})=>{document.getElementById('playersTitle')
 socket.on('error',msg=>{if(state.role==='student')showMsg('joinErr',msg);else showToast(msg,'error')});
 
 socket.on('game:question',({index,total,question,options,time})=>{
+  try{ QuizokSound.newQuestion(); }catch(e){}
   state.currentQ=index;state.totalQ=total;state.answered=false;
   if(state.role==='teacher'){
     showScreen('game-teacher');
@@ -2454,6 +2487,10 @@ socket.on('game:timer',({time})=>{
     const el=document.getElementById('gTimer');el.textContent=time;
     if(time<=5)el.classList.add('urgent');
   } else {document.getElementById('sgTimer').textContent=time}
+  try{
+    if(time<=5) QuizokSound.urgentTick();
+    else if(time<=10) QuizokSound.tick();
+  }catch(e){}
 });
 
 socket.on('teacher:answers_update',({answered,total})=>{
@@ -2466,6 +2503,7 @@ socket.on('player:answer_result',({is_correct,points,total_score})=>{
   document.getElementById('sgFeedback').innerHTML=is_correct
     ?`✅ To'g'ri! <span style="color:var(--gold)">+${points}</span>`
     :`❌ Noto'g'ri!`;
+  try{ is_correct ? QuizokSound.correct() : QuizokSound.wrong(); }catch(e){}
 });
 
 socket.on('game:reveal',({correct_index})=>{
@@ -2480,6 +2518,7 @@ socket.on('game:reveal',({correct_index})=>{
 });
 
 socket.on('game:end',({leaderboard})=>{
+  try{ QuizokSound.victory(); }catch(e){}
   if(state.role==='teacher'){
     const medals=['🥇','🥈','🥉'];
     const lb=document.getElementById('leaderboard');lb.innerHTML='';
@@ -2561,10 +2600,20 @@ async function deleteQuiz(quizId,btn){
 async function loadStats(){
   try{
     const headers=state.token?{'Authorization':'Bearer '+state.token}:{};
+    // Real stats endpoint
+    if(state.token){
+      const sr=await fetch('/api/stats',{headers});
+      if(sr.ok){
+        const stats=await sr.json();
+        document.getElementById('statGames').textContent=stats.total_games||0;
+        document.getElementById('statPlayers').textContent=stats.total_players||0;
+        document.getElementById('statQuizzes').textContent=stats.total_quizzes||0;
+      }
+    }
     const qr=await fetch('/api/my-quizzes',{headers});
     if(qr.ok){
       const quizzes=await qr.json();
-      document.getElementById('statQuizzes').textContent=quizzes.length;
+      if(!state.token) document.getElementById('statQuizzes').textContent=quizzes.length;
       const topList=document.getElementById('topQuizList');
       if(quizzes.length){
         topList.innerHTML='';
@@ -2577,6 +2626,8 @@ async function loadStats(){
           topList.appendChild(div);
         });
         setTimeout(()=>topList.querySelectorAll('.tq-bar-fill').forEach(b=>b.style.width=b.dataset.w),100);
+      } else {
+        document.getElementById('topQuizList').innerHTML='<div style="text-align:center;padding:30px;color:var(--t3);font-size:14px">Hali quiz yaratilmagan</div>';
       }
     }
   }catch(e){console.error('Stats error:',e)}
