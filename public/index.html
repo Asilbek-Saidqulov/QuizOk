@@ -299,6 +299,20 @@ select.inp{cursor:pointer}
    LANDING
 ============================================================ */
 
+.land-nav{
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:24px 48px;
+  max-width:1140px;
+  margin:0 auto;
+  z-index:2;
+}
+
 .land-logo{font-size:26px;font-weight:800;background:var(--pg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .land-nav-btns{display:flex;gap:10px;align-items:center}
 
@@ -492,7 +506,6 @@ select.inp{cursor:pointer}
 /* ============================================================
    HOME (logged in)
 ============================================================ */
-#home{}
 .home-body{
   flex:1;display:flex;flex-direction:column;
   max-width:900px;width:100%;margin:0 auto;padding:40px 24px;
@@ -516,7 +529,7 @@ select.inp{cursor:pointer}
   pointer-events:none;
 }
 .ai-hero-row{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
-.ai-hero-left{}
+
 .ai-hero-eyebrow{
   display:inline-flex;align-items:center;gap:6px;
   font-size:12px;font-weight:700;color:var(--ai);
@@ -644,7 +657,6 @@ select.inp{cursor:pointer}
 /* ============================================================
    TEACHER PANEL
 ============================================================ */
-#teacher{}
 .t-body{max-width:820px;margin:0 auto;padding:28px 24px;width:100%}
 
 /* AI / MANUAL TABS */
@@ -811,7 +823,9 @@ select.inp{cursor:pointer}
 /* ============================================================
    GAME TEACHER
 ============================================================ */
-#game-teacher{}
+#game-teacher{
+  display:flex;flex-direction:column;
+}
 .g-header{
   background:var(--s1);border-bottom:1px solid var(--bd);
   padding:14px 28px;display:flex;align-items:center;
@@ -868,7 +882,6 @@ select.inp{cursor:pointer}
 /* ============================================================
    GAME STUDENT
 ============================================================ */
-#game-student{}
 .sg-header{
   background:var(--s1);border-bottom:1px solid var(--bd);
   padding:12px 20px;display:flex;justify-content:space-between;align-items:center;
@@ -1123,6 +1136,137 @@ select.inp{cursor:pointer}
   .qs-row{grid-template-columns:1fr}
   .ai-opts-row{grid-template-columns:1fr}
 }
+
+.rank-cat-btn {
+  padding: 9px 18px; border-radius: 30px;
+  border: 1px solid var(--bd); background: var(--s1);
+  color: var(--t2); font-family: var(--font); font-size: 13px;
+  font-weight: 600; cursor: pointer; transition: all .2s;
+}
+.rank-cat-btn:hover { border-color: var(--p2); color: var(--p2); }
+.rank-cat-btn.active {
+  background: rgba(124,108,250,.12);
+  border-color: rgba(124,108,250,.4); color: var(--p2);
+}
+.rank-row {
+  display: grid;
+  grid-template-columns: 52px 1fr 90px 90px 80px;
+  padding: 14px 20px; border-bottom: 1px solid var(--bd);
+  align-items: center; transition: background .15s;
+}
+.rank-row:last-child { border-bottom: none; }
+.rank-row:hover { background: var(--s2); }
+.rank-row.top1 { background: rgba(251,191,36,.05); }
+.rank-row.top2 { background: rgba(200,200,200,.03); }
+.rank-row.top3 { background: rgba(205,127,50,.04); }
+.rank-row.mine { background: rgba(124,108,250,.06); border-left: 2px solid var(--p); }
+
+.cat-sel-btn {
+  padding: 8px 16px; border-radius: 30px;
+  border: 1px solid var(--bd); background: var(--s1);
+  color: var(--t2); font-family: var(--font); font-size: 13px;
+  font-weight: 600; cursor: pointer; transition: all .2s;
+}
+.cat-sel-btn:hover { border-color: var(--p2); color: var(--p2); }
+.cat-sel-btn.active {
+  background: rgba(124,108,250,.12);
+  border-color: rgba(124,108,250,.4); color: var(--p2);
+}
+
+/* DYNAMIC BACKGROUNDS */
+.bg-math {
+  background: radial-gradient(circle 900px at 10% 20%, #0a0a2e, transparent),
+              radial-gradient(circle 600px at 90% 80%, #001a4d, transparent) !important;
+}
+.bg-math::before {
+  background-image:
+    radial-gradient(circle 800px at 20% 20%, #1a1aff18, transparent),
+    radial-gradient(circle 600px at 80% 80%, #0044ff14, transparent) !important;
+}
+
+.bg-science {
+  background: radial-gradient(circle 900px at 15% 25%, #001a00, transparent),
+              radial-gradient(circle 600px at 85% 75%, #002200, transparent) !important;
+}
+.bg-science::before {
+  background-image:
+    radial-gradient(circle 800px at 20% 20%, #00ff4418, transparent),
+    radial-gradient(circle 600px at 80% 80%, #4ade8014, transparent) !important;
+}
+
+.bg-history {
+  background: radial-gradient(circle 900px at 10% 20%, #1a0e00, transparent),
+              radial-gradient(circle 600px at 90% 80%, #2a1500, transparent) !important;
+}
+.bg-history::before {
+  background-image:
+    radial-gradient(circle 800px at 20% 20%, #c08a2018, transparent),
+    radial-gradient(circle 600px at 80% 80%, #fbbf2414, transparent) !important;
+}
+
+.bg-business {
+  background: radial-gradient(circle 900px at 10% 20%, #0a001a, transparent),
+              radial-gradient(circle 600px at 90% 80%, #150030, transparent) !important;
+}
+.bg-business::before {
+  background-image:
+    radial-gradient(circle 800px at 20% 20%, #c084fc18, transparent),
+    radial-gradient(circle 600px at 80% 80%, #7c6cfa14, transparent) !important;
+}
+
+.bg-ielts {
+  background: radial-gradient(circle 900px at 10% 20%, #001a1a, transparent),
+              radial-gradient(circle 600px at 90% 80%, #002222, transparent) !important;
+}
+.bg-ielts::before {
+  background-image:
+    radial-gradient(circle 800px at 20% 20%, #00e5c318, transparent),
+    radial-gradient(circle 600px at 80% 80%, #0ea5e914, transparent) !important;
+}
+
+.bg-language {
+  background: radial-gradient(circle 900px at 10% 20%, #1a0010, transparent),
+              radial-gradient(circle 600px at 90% 80%, #250018, transparent) !important;
+}
+.bg-language::before {
+  background-image:
+    radial-gradient(circle 800px at 20% 20%, #f472b618, transparent),
+    radial-gradient(circle 600px at 80% 80%, #ec489914, transparent) !important;
+}
+
+/* Fon o'tish animatsiyasi */
+body { transition: background 1.2s ease; }
+
+/* Floating formula particles (math uchun) */
+.formula-particle {
+  position: fixed;
+  font-family: var(--mono);
+  font-size: 14px;
+  color: rgba(100, 150, 255, 0.25);
+  pointer-events: none;
+  z-index: 0;
+  animation: formulaFloat linear infinite;
+  user-select: none;
+}
+@keyframes formulaFloat {
+  0%   { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+}
+
+.mode-card {
+  background: var(--s2); border: 2px solid var(--bd);
+  border-radius: 16px; padding: 20px; text-align: center;
+  cursor: pointer; transition: all .2s;
+}
+.mode-card:hover { border-color: var(--p2); }
+.mode-card.active {
+  border-color: rgba(0,229,195,.5);
+  background: rgba(0,229,195,.06);
+}
+.mode-card.active div:nth-child(2) { color: var(--ai); }
+
 </style>
 </head>
 <body>
@@ -1486,6 +1630,37 @@ select.inp{cursor:pointer}
       <input type="text" class="inp" id="quizTitle" placeholder="Masalan: 7-sinf biologiya — Fotosintez">
     </div>
 
+    <!-- KATEGORIYA TANLASH -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-title">🏷️ Kategoriya</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap" id="catSelector">
+        <button class="cat-sel-btn active" data-cat="general"  onclick="selectCat('general',this)">🌍 Umumiy</button>
+        <button class="cat-sel-btn"        data-cat="math"     onclick="selectCat('math',this)">📐 Matematika</button>
+        <button class="cat-sel-btn"        data-cat="science"  onclick="selectCat('science',this)">🔬 Fan</button>
+        <button class="cat-sel-btn"        data-cat="history"  onclick="selectCat('history',this)">🏛️ Tarix</button>
+        <button class="cat-sel-btn"        data-cat="business" onclick="selectCat('business',this)">💼 Biznes</button>
+        <button class="cat-sel-btn"        data-cat="ielts"    onclick="selectCat('ielts',this)">📝 IELTS</button>
+        <button class="cat-sel-btn"        data-cat="language" onclick="selectCat('language',this)">🗣️ Til</button>
+      </div>
+    </div>
+
+    <!-- O'YIN REJIMI -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-title">🎮 O'yin rejimi</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="mode-card active" id="modeClassic" onclick="selectMode('classic')">
+          <div style="font-size:28px;margin-bottom:8px">📝</div>
+          <div style="font-weight:700;margin-bottom:4px">Classic</div>
+          <div style="font-size:12px;color:var(--t3)">Hamma o'ynaydi, ball yig'iladi</div>
+        </div>
+        <div class="mode-card" id="modeSurvival" onclick="selectMode('survival')">
+          <div style="font-size:28px;margin-bottom:8px">⚔️</div>
+          <div style="font-weight:700;margin-bottom:4px">Survival Arena</div>
+          <div style="font-size:12px;color:var(--t3)">Xato = chiqib ketish. Oxirgi qolgan g'olib!</div>
+        </div>
+      </div>
+    </div>
+
     <!-- BUILD TABS: AI / MANUAL -->
     <div class="build-tabs">
       <button class="build-tab ai-tab active" id="buildTabAI" onclick="switchBuildTab('ai')">✦ AI bilan yaratish</button>
@@ -1816,6 +1991,57 @@ select.inp{cursor:pointer}
   </div>
 </div>
 
+<!-- RANKING SCREEN -->
+<div class="screen" id="rankings">
+  <div class="topbar">
+    <button class="ham" onclick="openSidebar()">☰</button>
+    <div class="topbar-logo">QuizOk</div>
+    <div class="topbar-sep"></div>
+    <div class="topbar-label">Global Ranking</div>
+  </div>
+  <div style="max-width:900px;margin:0 auto;padding:28px 24px;width:100%">
+    
+    <!-- Kategoriya tabs -->
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px">
+      <button class="rank-cat-btn active" data-cat="general"    onclick="loadRanking('general',this)">🌍 Umumiy</button>
+      <button class="rank-cat-btn"        data-cat="math"       onclick="loadRanking('math',this)">📐 Matematika</button>
+      <button class="rank-cat-btn"        data-cat="science"    onclick="loadRanking('science',this)">🔬 Fan</button>
+      <button class="rank-cat-btn"        data-cat="history"    onclick="loadRanking('history',this)">🏛️ Tarix</button>
+      <button class="rank-cat-btn"        data-cat="business"   onclick="loadRanking('business',this)">💼 Biznes</button>
+      <button class="rank-cat-btn"        data-cat="ielts"      onclick="loadRanking('ielts',this)">📝 IELTS</button>
+      <button class="rank-cat-btn"        data-cat="language"   onclick="loadRanking('language',this)">🗣️ Til</button>
+    </div>
+
+    <!-- Mening pozitsiyam -->
+    <div id="myRankCard" style="display:none;background:linear-gradient(135deg,rgba(124,108,250,.1),rgba(0,229,195,.07));border:1px solid rgba(0,229,195,.25);border-radius:16px;padding:20px;margin-bottom:20px">
+      <div style="font-size:12px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Mening o'rnim</div>
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+        <div style="font-size:42px;font-weight:800;color:var(--p2)" id="myRankNum">—</div>
+        <div style="flex:1">
+          <div style="font-size:16px;font-weight:700" id="myRankName">—</div>
+          <div style="font-size:13px;color:var(--t2);margin-top:4px" id="myRankStats">—</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:28px;font-weight:800;color:var(--gold)" id="myRankScore">0</div>
+          <div style="font-size:12px;color:var(--t3)">ball</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Jadval -->
+    <div style="background:var(--s1);border:1px solid var(--bd);border-radius:20px;overflow:hidden">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between">
+        <div style="font-size:15px;font-weight:700" id="rankCatTitle">🌍 Global Ranking</div>
+        <div class="badge badge-purple" id="rankCount">yuklanmoqda...</div>
+      </div>
+      <div id="rankTableHead" style="display:grid;grid-template-columns:52px 1fr 90px 90px 80px;padding:10px 20px;font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;font-weight:600;border-bottom:1px solid var(--bd)">
+        <div>#</div><div>O'yinchi</div><div style="text-align:center">Ball</div><div style="text-align:center">Aniqlik</div><div style="text-align:center">O'yinlar</div>
+      </div>
+      <div id="rankList" style="min-height:200px"></div>
+    </div>
+  </div>
+</div>
+
 <!-- ============================================================
      PROFILE
 ============================================================ -->
@@ -1900,6 +2126,7 @@ select.inp{cursor:pointer}
     <div class="sb-div"></div>
     <div class="sb-section">Boshqaruv</div>
     <button class="sb-item" onclick="sidebarGo('stats')"><span class="sb-item-icon">📊</span> Statistika</button>
+    <button class="sb-item" onclick="sidebarGo('rankings')"><span class="sb-item-icon">🏆</span> Global Ranking</button>
     <button class="sb-item" onclick="sidebarGo('settings')"><span class="sb-item-icon">⚙️</span> Sozlamalar</button>
     <button class="sb-item" onclick="sidebarGo('profile-page')"><span class="sb-item-icon">👤</span> Profil</button>
   </nav>
@@ -1923,9 +2150,17 @@ let state = {
 };
 let localQuestions = [];
 let selectedCorrect = -1;
+let selectedCategory = 'general';
 let aiCount = 10;
 let tAiCount = 10;
 let aiGeneratedQs = [];
+
+function selectCat(cat, btn) {
+  selectedCategory = cat;
+  document.querySelectorAll('.cat-sel-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  setDynamicBg(cat);
+}
 
 /* ============================================================
    UTILS
@@ -2060,7 +2295,82 @@ function sidebarGo(screen){
   else if(screen==='stats'){loadStats();showScreen('stats')}
   else if(screen==='settings'){showScreen('settings')}
   else if(screen==='profile-page'){loadProfile();showScreen('profile-page')}
+  else if (screen === 'rankings') { loadRanking('general'); showScreen('rankings'); }
   else{showScreen(screen)}
+}
+
+// ===== RANKING =====
+const CAT_LABELS = {
+  general:'🌍 Umumiy', math:'📐 Matematika', science:'🔬 Fan',
+  history:'🏛️ Tarix', business:'💼 Biznes', ielts:'📝 IELTS', language:'🗣️ Til'
+};
+
+async function loadRanking(cat, btn) {
+  // Tab active
+  document.querySelectorAll('.rank-cat-btn').forEach(b => b.classList.remove('active'));
+  const activeBtn = btn || document.querySelector(`.rank-cat-btn[data-cat="${cat}"]`);
+  if (activeBtn) activeBtn.classList.add('active');
+
+  document.getElementById('rankCatTitle').textContent = CAT_LABELS[cat] || cat;
+  document.getElementById('rankCount').textContent = 'yuklanmoqda...';
+  document.getElementById('rankList').innerHTML =
+    '<div style="text-align:center;padding:40px;color:var(--t3)">⏳ Yuklanmoqda...</div>';
+
+  try {
+    // Mening rankingim
+    if (state.token) {
+      fetch(`/api/rankings/me/${cat}`, { headers: { 'Authorization': 'Bearer ' + state.token } })
+        .then(r => r.json()).then(d => {
+          const card = document.getElementById('myRankCard');
+          if (d.rank && d.data) {
+            card.style.display = 'block';
+            document.getElementById('myRankNum').textContent = '#' + d.rank;
+            document.getElementById('myRankName').textContent = state.user?.name || '—';
+            document.getElementById('myRankStats').textContent =
+              `${d.data.games_played} o'yin · ${d.data.accuracy}% aniqlik · ${d.data.total_correct} to'g'ri`;
+            document.getElementById('myRankScore').textContent = d.data.total_score.toLocaleString();
+          } else {
+            card.style.display = 'none';
+          }
+        }).catch(() => {});
+    }
+
+    const r = await fetch(`/api/rankings/${cat}?limit=50`);
+    const data = await r.json();
+    if (!Array.isArray(data)) throw new Error();
+
+    document.getElementById('rankCount').textContent = data.length + ' ta o\'yinchi';
+
+    const list = document.getElementById('rankList');
+    if (!data.length) {
+      list.innerHTML = '<div style="text-align:center;padding:48px;color:var(--t3);font-size:14px">Hali hech kim o\'ynamagan</div>';
+      return;
+    }
+
+    const medals = ['🥇', '🥈', '🥉'];
+    list.innerHTML = data.map((p, i) => {
+      const isMe = state.user && p.user_id === state.user?.id;
+      const topClass = i === 0 ? 'top1' : i === 1 ? 'top2' : i === 2 ? 'top3' : '';
+      return `<div class="rank-row ${topClass} ${isMe ? 'mine' : ''}">
+        <div style="font-size:${i < 3 ? '20' : '15'}px;font-weight:800;color:${i===0?'var(--gold)':i===1?'#aaa':i===2?'#cd7f32':'var(--t3)'}">
+          ${i < 3 ? medals[i] : i + 1}
+        </div>
+        <div>
+          <div style="font-size:14px;font-weight:600">${p.name}${isMe ? ' <span style="color:var(--ai);font-size:11px">(siz)</span>' : ''}</div>
+          <div style="font-size:11px;color:var(--t3);margin-top:2px">${p.games_played} o'yin</div>
+        </div>
+        <div style="text-align:center;font-size:15px;font-weight:800;color:var(--gold)">${(p.total_score||0).toLocaleString()}</div>
+        <div style="text-align:center">
+          <span style="font-size:13px;font-weight:700;color:${p.accuracy>=80?'var(--green)':p.accuracy>=50?'var(--gold)':'var(--red)'}">${p.accuracy||0}%</span>
+        </div>
+        <div style="text-align:center;font-size:13px;color:var(--t2)">${p.games_played}</div>
+      </div>`;
+    }).join('');
+
+  } catch (e) {
+    document.getElementById('rankList').innerHTML =
+      '<div style="text-align:center;padding:40px;color:var(--t3)">❌ Yuklab bo\'lmadi</div>';
+  }
 }
 
 /* ============================================================
@@ -2134,10 +2444,13 @@ Matn: ${text.substring(0,3000)}`;
       {type:'text',text:prompt}
     ]:prompt}];
 
-    const res=await fetch('/api/anthropic/generate-quiz',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({messages,count,title})
+    const res=await fetch('/api/ai/generate',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        text: tab==='text' ? document.getElementById('aiTextInput').value.trim() : '',
+        imageBase64: aiUploadedImageB64 || null,
+        count: count
+      })
     });
 
     if(!res.ok){
@@ -2147,15 +2460,9 @@ Matn: ${text.substring(0,3000)}`;
       return;
     }
     const data=await res.json();
-    let qs=[];
-    try{
-      const txt=data.content||data.text||'';
-      const clean=txt.replace(/```json|```/g,'').trim();
-      qs=JSON.parse(clean);
-    }catch(e){
-      qs=getDemoQuestions(count);
-    }
+    const qs=data.questions||getDemoQuestions(count);
     showAIResults(qs,title);
+
   }catch(e){
     await fakeAIDelay();
     showAIResults(getDemoQuestions(count),title);
@@ -2271,18 +2578,18 @@ async function runTeacherAI(){
   btn.disabled=true;btn.textContent='✦ Yaratilmoqda...';
 
   try{
-    const res=await fetch('/api/anthropic/generate-quiz',{
+    const res=await fetch('/api/ai/generate',{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({messages:[{role:'user',content:imageB64?[
-        {type:'image',source:{type:'base64',media_type:'image/jpeg',data:imageB64}},
-        {type:'text',text:prompt}
-      ]:prompt}],count})
+      body:JSON.stringify({
+        text: method==='text' ? document.getElementById('tAiText').value.trim() : '',
+        imageBase64: tAiImageB64 || null,
+        count: count
+      })
     });
     let qs=[];
     if(res.ok){
       const data=await res.json();
-      try{const txt=data.content||data.text||'';qs=JSON.parse(txt.replace(/```json|```/g,'').trim())}
-      catch(e){qs=getDemoQuestions(count)}
+      qs=data.questions||getDemoQuestions(count);
     } else {
       await fakeAIDelay();qs=getDemoQuestions(count);
     }
@@ -2380,7 +2687,7 @@ async function createSession(){
   if(localQuestions.length<2)return showToast('Kamida 2 ta savol kerak','error');
   try{
     const authHeader=state.token?{'Authorization':'Bearer '+state.token}:{};
-    const r1=await fetch('/api/quiz',{method:'POST',headers:{'Content-Type':'application/json',...authHeader},body:JSON.stringify({title,questions:localQuestions})});
+    const r1=await fetch('/api/quiz',{method:'POST',headers:{'Content-Type':'application/json',...authHeader},body:JSON.stringify({title,questions:localQuestions, category: selectedCategory, mode: selectedMode})});
     const quiz=await r1.json();
     if(quiz.error)return showToast(quiz.error,'error');
     const r2=await fetch('/api/session',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({quiz_id:quiz.quiz_id})});
@@ -2390,6 +2697,7 @@ async function createSession(){
     socket.emit('teacher:join',{code:session.code});
     document.getElementById('lobbyCode').textContent=session.code;
     document.getElementById('lobbyCodeSmall').textContent=session.code;
+    setDynamicBg(selectedCategory);
     showScreen('lobby');
   }catch(e){showToast('Server xatolik: '+e.message,'error')}
 }
@@ -2433,6 +2741,7 @@ function answerQ(idx,btn){
    SOCKET EVENTS
 ============================================================ */
 socket.on('player:new',({name,count})=>{
+  console.log('Player joined:', name, count);
   try{ QuizokSound.playerJoin(); }catch(e){}
   const grid=document.getElementById('playersGrid');
   const chip=document.createElement('div');chip.className='p-chip';
@@ -2444,9 +2753,10 @@ socket.on('player:new',({name,count})=>{
 socket.on('player:left',({name,count})=>{document.getElementById('playersTitle').textContent=`${count} ta o'quvchi`});
 socket.on('error',msg=>{if(state.role==='student')showMsg('joinErr',msg);else showToast(msg,'error')});
 
-socket.on('game:question',({index,total,question,options,time})=>{
+socket.on('game:question',({index,total,question,options,time, category})=>{
   try{ QuizokSound.newQuestion(); }catch(e){}
   state.currentQ=index;state.totalQ=total;state.answered=false;
+  setDynamicBg(category || 'general');
   if(state.role==='teacher'){
     showScreen('game-teacher');
     document.getElementById('gQNum').textContent=index+1;
@@ -2506,7 +2816,34 @@ socket.on('player:answer_result',({is_correct,points,total_score})=>{
   try{ is_correct ? QuizokSound.correct() : QuizokSound.wrong(); }catch(e){}
 });
 
-socket.on('game:reveal',({correct_index})=>{
+socket.on('player:eliminated', ({ name, score, rank }) => {
+  // O'yinchi chiqib ketdi
+  document.getElementById('sgOpts').innerHTML = '';
+  document.getElementById('sgFeedback').innerHTML = '';
+  document.getElementById('sgQText').textContent = '';
+  
+  showScreen('student-end');
+  document.getElementById('seEmoji').textContent = '💀';
+  document.getElementById('seName').textContent = name;
+  document.getElementById('seScore').textContent = score;
+  document.getElementById('sePts').textContent = `Xato javob — o'yindan chiqdingiz`;
+  document.getElementById('se-wait').textContent = 'G\'olibni kutmoqda...';
+});
+
+socket.on('survival:alive_update', ({ alive, total, eliminated_name }) => {
+  // Teacher screen da tirik o'yinchilar soni
+  const answersEl = document.getElementById('gAnswers');
+  if (answersEl) {
+    answersEl.textContent = `⚔️ ${alive} tirik`;
+    answersEl.style.background = 'rgba(248,113,113,.15)';
+    answersEl.style.borderColor = 'rgba(248,113,113,.3)';
+    answersEl.style.color = 'var(--red)';
+  }
+  showToast(`💀 ${eliminated_name} chiqib ketdi`, 'error');
+});
+
+socket.on('game:reveal',({correct_index, category})=>{
+  setDynamicBg(category || 'general');
   if(state.role==='teacher'){
     document.querySelectorAll('.ans-btn').forEach((btn,i)=>{
       if(i===correct_index)btn.classList.add('correct');else btn.classList.add('wrong');
@@ -2517,9 +2854,28 @@ socket.on('game:reveal',({correct_index})=>{
   }
 });
 
-socket.on('game:end',({leaderboard})=>{
+socket.on('game:end',({leaderboard, mode, champion})=>{
   try{ QuizokSound.victory(); }catch(e){}
+  setDynamicBg('general');
+  
   if(state.role==='teacher'){
+    // Survival champion banneri
+    if (mode === 'survival' && champion) {
+      const lb = document.getElementById('leaderboard');
+      const banner = document.createElement('div');
+      banner.style.cssText = `
+        background: linear-gradient(135deg, rgba(251,191,36,.15), rgba(251,191,36,.05));
+        border: 2px solid rgba(251,191,36,.4); border-radius: 16px;
+        padding: 24px; text-align: center; margin-bottom: 20px;
+      `;
+      banner.innerHTML = `
+        <div style="font-size:48px;margin-bottom:8px">👑</div>
+        <div style="font-size:22px;font-weight:800;color:var(--gold)">${champion.name}</div>
+        <div style="font-size:14px;color:var(--t2);margin-top:6px">Survival Arena Championi!</div>
+        <div style="font-size:28px;font-weight:800;margin-top:8px">${champion.score} ball</div>
+      `;
+      lb.prepend(banner);
+    }
     const medals=['🥇','🥈','🥉'];
     const lb=document.getElementById('leaderboard');lb.innerHTML='';
     leaderboard.forEach((p,i)=>{
@@ -2545,6 +2901,17 @@ async function loadMyQuizzes(){
   const grid=document.getElementById('myQuizGrid');
   const empty=document.getElementById('mqEmpty');
   const subtitle=document.getElementById('mqSubtitle');
+  if (!state.token) {
+    subtitle.textContent = 'Kirish kerak';
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    empty.innerHTML = `<div class="empty-icon">🔐</div>
+      <div class="empty-title">Kirish kerak</div>
+      <div class="empty-desc">Quizlaringizni ko'rish uchun hisobga kiring</div>
+      <button class="btn btn-ai" onclick="showAuth('login')">Kirish</button>`;
+    return;
+  }
+
   grid.innerHTML='<div style="text-align:center;padding:40px;color:var(--t3)">⏳ Yuklanmoqda...</div>';
   try{
     const headers=state.token?{'Authorization':'Bearer '+state.token}:{};
@@ -2559,7 +2926,7 @@ async function loadMyQuizzes(){
     quizzes.forEach((q,i)=>{
       const div=document.createElement('div');div.className='qz-card';
       const created=q.created_at?new Date(q.created_at).toLocaleDateString('uz-UZ'):'—';
-      div.innerHTML=`<div class="qz-icon">${icons[i%icons.length]}</div><div class="qz-info"><div class="qz-title">${q.title||'Nomsiz quiz'}</div><div class="qz-meta"><span>❓ ${q.question_count||0} ta savol</span><span>📅 ${created}</span></div></div><div class="badge badge-green">Aktiv</div><div class="qz-actions"><button class="qz-btn play" onclick="playQuiz('${q.quiz_id}')">▶ O'yna</button><button class="qz-btn del" onclick="deleteQuiz('${q.quiz_id}',this)">🗑</button></div>`;
+      div.innerHTML=`<div class="qz-icon">${icons[i%icons.length]}</div><div class="qz-info"><div class="qz-title">${q.title||'Nomsiz quiz'}</div><div class="qz-meta"><span>❓ ${q.question_count||0} ta savol</span><span>📅 ${created}</span><span>${CAT_LABELS[q.category]||'🌍 Umumiy'}</span></div></div><div class="badge badge-green">Aktiv</div><div class="qz-actions"><button class="qz-btn play" onclick="playQuiz('${q.quiz_id}')">▶ O'yna</button><button class="qz-btn del" onclick="deleteQuiz('${q.quiz_id}',this)">🗑</button></div>`;
       grid.appendChild(div);
     });
   }catch(e){
@@ -2710,6 +3077,66 @@ document.addEventListener('keydown',e=>{
     }
   }
 });
+
+/* ============================================================
+   DYNAMIC BACKGROUNDS
+============================================================ */
+const BG_CLASSES = ['bg-math','bg-science','bg-history','bg-business','bg-ielts','bg-language'];
+
+const FORMULAS = {
+  math: ['∑x²','∫f(x)dx','√(a²+b²)','π≈3.14','lim→∞','d/dx','∂²y','∮F·ds','∇²φ','e^iπ=-1'],
+  science: ['H₂O','CO₂','E=mc²','F=ma','DNA','ATP','pH=7','λ=c/f','∆H','PV=nRT'],
+  history: ['753 BC','1066','1776','1789','1917','MCMXLV','Anno Domini','BCE','∞ yil'],
+  business: ['ROI','P&L','EBITDA','B2B','KPI','MVP','IPO','CAC','LTV','ARR'],
+  ielts: ['IELTS','Band 9','C2','vocabulary','grammar','fluency','coherence','lexis'],
+  language: ['Hello','مرحبا','こんにちは','Привет','Bonjour','你好','¡Hola','Ciao'],
+};
+
+let floatingParticles = [];
+
+function setDynamicBg(category) {
+  // Eski classlarni olib tashlash
+  BG_CLASSES.forEach(c => document.body.classList.remove(c));
+  clearFloatingParticles();
+
+  if (!category || category === 'general') return;
+
+  document.body.classList.add(`bg-${category}`);
+  spawnFormulas(category);
+}
+
+function spawnFormulas(category) {
+  const formulas = FORMULAS[category];
+  if (!formulas) return;
+
+  for (let i = 0; i < 12; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'formula-particle';
+      el.textContent = formulas[Math.floor(Math.random() * formulas.length)];
+      el.style.left = Math.random() * 100 + 'vw';
+      el.style.animationDuration = (12 + Math.random() * 18) + 's';
+      el.style.animationDelay = (Math.random() * 8) + 's';
+      el.style.fontSize = (11 + Math.random() * 10) + 'px';
+      document.body.appendChild(el);
+      floatingParticles.push(el);
+    }, i * 300);
+  }
+}
+
+function clearFloatingParticles() {
+  floatingParticles.forEach(el => el.remove());
+  floatingParticles = [];
+}
+
+let selectedMode = 'classic';
+
+function selectMode(mode) {
+  selectedMode = mode;
+  document.getElementById('modeClassic').classList.toggle('active', mode === 'classic');
+  document.getElementById('modeSurvival').classList.toggle('active', mode === 'survival');
+}
+
 </script>
 
 <script src="/sound.js"></script>
