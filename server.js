@@ -488,6 +488,24 @@ io.on('connection', (socket) => {
       }
     }
   });
+
+  socket.on('game:ranking', ({ ranking }) => {
+    const list = document.getElementById('liveRankingList');
+    if (!list) return;
+  
+    const medals = ['🥇', '🥈', '🥉'];
+    list.innerHTML = ranking.map((p, i) => `
+     <div class="lr-item ${p.eliminated ? 'eliminated' : ''}">
+        <div class="lr-rank">${medals[i] || i + 1}</div>
+        <div class="lr-name">${p.name}${p.eliminated ? ' 💀' : ''}</div>
+        <div style="font-size:11px;color:var(--t3);margin-right:8px">
+          ${p.correct} ✓
+        </div>
+        <div class="lr-score">${p.score}</div>
+     </div>
+    `).join('');
+  });
+
 });
 
 // ===== HELPER FUNCTIONS =====
@@ -542,7 +560,7 @@ function revealAnswer(code) {
   const q = session.questions[session.current_question];
   if (!q) return;
 
-  // Javob bermaganlarni ham noto'g'ri deb belgilash (survival da)
+  // Survival: javob bermaganlar ham chiqadi
   if (session.mode === 'survival') {
     Object.entries(session.players).forEach(([sid, player]) => {
       if (!player.answered && !session.eliminated[sid]) {
@@ -561,8 +579,34 @@ function revealAnswer(code) {
   io.to(`session:${code}`).emit('game:reveal', {
     correct_index: q.correct_index,
     category: session.category,
-    stats // har bir variantga nechta javob
+    stats
   });
+
+  // === LIVE RANKING EMIT ===
+  const ranking = Object.values(session.players)
+    .sort((a, b) => b.score - a.score)
+    .map((p, i) => ({
+      rank: i + 1,
+      name: p.name,
+      score: p.score,
+      correct: p.correct,
+      eliminated: !!session.eliminated[p.socket_id]
+    }));
+
+  io.to(`session:${code}`).emit('game:ranking', { ranking });
+
+  // === AUTO-NEXT: 4 soniyadan keyin ===
+  setTimeout(() => {
+    const sess = activeSessions[code];
+    if (!sess || sess.status !== 'playing') return;
+    
+    sess.current_question++;
+    if (sess.current_question >= sess.questions.length) {
+      endGame(code);
+    } else {
+      sendQuestion(code);
+    }
+  }, 4000); // 4 soniya — o'qituvchi natijani ko'rsin
 }
 
 async function endGame(code) {
