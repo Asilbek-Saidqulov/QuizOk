@@ -26,15 +26,237 @@ app.use(express.json());
 app.use('/api/auth', authRouter);
 app.use(express.static(path.join(__dirname, 'public')));
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-);
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey, {
+  auth: { persistSession: false }
+});
+
+if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+  console.warn('WARNING: No SUPABASE_SERVICE_ROLE_KEY found. Server-side write operations may be blocked by RLS policies.');
+}
 
 // Xotirada sessiyalar
 const activeSessions = {};
 
+const MOCK_QUIZ = {
+  id: 'mock_quiz_001',
+  title: 'Mathematics Challenge',
+  description: 'Test your math skills with a short practice quiz.',
+  category: 'math',
+  difficulty: 'medium',
+  mode: 'classic',
+  teacher_id: null,
+  is_published: true,
+  published_at: new Date().toISOString(),
+  created_at: new Date().toISOString(),
+  likes: 42,
+  play_count: 120,
+  views: 180,
+  is_featured: true,
+  is_editor_pick: true,
+  is_ai_generated: false,
+  question_count: 5,
+  duration_min: 8,
+  cover_gradient: 'linear-gradient(135deg, #0a1628 0%, #0066aa 50%, #00aaff 100%)',
+  creator: {
+    id: 'mock_creator_001',
+    username: 'QuizOk Team',
+    avatar: 'QZ'
+  }
+};
+
+const MOCK_QUESTIONS = [
+  {
+    id: 'mq1',
+    type: 'multiple_choice',
+    question: 'What is 15 × 7?',
+    options: ['95', '105', '115', '125'],
+    correctOption: 1,
+    correct_index: 1,
+    timeLimit: 30,
+    explanation: '15 × 7 = 105'
+  },
+  {
+    id: 'mq2',
+    type: 'multiple_choice',
+    question: 'What is the square root of 144?',
+    options: ['10', '11', '12', '14'],
+    correctOption: 2,
+    correct_index: 2,
+    timeLimit: 30,
+    explanation: '12 × 12 = 144'
+  },
+  {
+    id: 'mq3',
+    type: 'multiple_choice',
+    question: 'Solve: 2x + 5 = 15',
+    options: ['x = 4', 'x = 5', 'x = 6', 'x = 7'],
+    correctOption: 1,
+    correct_index: 1,
+    timeLimit: 45,
+    explanation: '2x = 10, so x = 5'
+  },
+  {
+    id: 'mq4',
+    type: 'multiple_choice',
+    question: 'What is 25% of 80?',
+    options: ['15', '18', '20', '22'],
+    correctOption: 2,
+    correct_index: 2,
+    timeLimit: 30,
+    explanation: '0.25 × 80 = 20'
+  },
+  {
+    id: 'mq5',
+    type: 'multiple_choice',
+    question: 'What is the next number in the sequence: 2, 6, 18, 54, ...?',
+    options: ['108', '162', '216', '324'],
+    correctOption: 1,
+    correct_index: 1,
+    timeLimit: 45,
+    explanation: 'Each number is multiplied by 3: 54 × 3 = 162'
+  }
+];
+
 // ===== REST API =====
+
+// Discover — public quiz catalog (Supabase)
+app.get('/api/discover', async (req, res) => {
+  try {
+    const { data: quizzes, error: quizError } = await supabase
+      .from('quizzes')
+      .select('*')
+      .eq('is_published', true)
+      .order('published_at', { ascending: false });
+    if (quizError) return res.status(500).json({ error: quizError.message });
+
+    const rows = quizzes || [];
+    const quizIds = rows.map((q) => q.id);
+    const teacherIds = [...new Set(rows.map((q) => q.teacher_id).filter(Boolean))];
+
+    const questionCountMap = {};
+    const playCountMap = {};
+
+    if (quizIds.length > 0) {
+      const { data: questions } = await supabase
+        .from('questions')
+        .select('quiz_id');
+      (questions || []).forEach((row) => {
+        questionCountMap[row.quiz_id] = (questionCountMap[row.quiz_id] || 0) + 1;
+      });
+
+      const { data: sessions } = await supabase
+        .from('sessions')
+        .select('quiz_id');
+      (sessions || []).forEach((row) => {
+        playCountMap[row.quiz_id] = (playCountMap[row.quiz_id] || 0) + 1;
+      });
+    }
+
+    const namesMap = {};
+    if (teacherIds.length > 0) {
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('id, name')
+        .in('id', teacherIds);
+      (profiles || []).forEach((p) => { namesMap[p.id] = p.name; });
+    }
+
+    const now = Date.now();
+    const normalized = [];
+
+    for (const q of rows) {
+      const question_count = questionCountMap[q.id] || 0;
+      if (question_count < 1) continue;
+      // Only published quizzes (already filtered by query, but guard here too)
+      if (!q.is_published) continue;
+
+      const play_count = q.play_count ?? playCountMap[q.id] ?? 0;
+      const likes = q.likes ?? 0;
+      const category = (q.category || 'general').toLowerCase();
+      const createdAt = q.created_at || new Date().toISOString();
+      const daysSince = (now - new Date(createdAt).getTime()) / 86400000;
+      const recentBoost = Math.max(0, 30 - daysSince) * 120;
+      const trending_score = play_count * 2 + likes * 3 + recentBoost;
+      const teacherId = q.teacher_id;
+      const name = namesMap[teacherId] || 'Creator';
+      const initials = name.trim().split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase() || 'QZ';
+
+      normalized.push({
+        id: q.id,
+        title: q.title || 'Untitled Quiz',
+        cover_gradient: null,
+        category,
+        difficulty: q.difficulty || 'medium',
+        question_count,
+        duration_min: q.duration_min ?? Math.max(5, Math.ceil(question_count * 1.2)),
+        play_count,
+        likes,
+        views: Math.floor(play_count * 1.4),
+        is_public: !!q.is_public,
+        is_ai_generated: !!(q.is_ai_generated || q.mode === 'ai'),
+        is_featured: !!q.is_featured,
+        is_editor_pick: !!q.is_editor_pick,
+        created_at: createdAt,
+        trending_score,
+        creator_id: teacherId,
+        creator: {
+          id: teacherId,
+          username: name,
+          avatar: initials
+        }
+      });
+    }
+
+    normalized.sort((a, b) => b.play_count - a.play_count);
+    normalized.forEach((quiz, i) => {
+      if (!quiz.is_featured && i < 4) quiz.is_featured = true;
+      if (!quiz.is_editor_pick && i >= 4 && i < 10) quiz.is_editor_pick = true;
+    });
+
+    const creatorStats = {};
+    normalized.forEach((quiz) => {
+      const cid = quiz.creator_id;
+      if (!cid) return;
+      if (!creatorStats[cid]) {
+        creatorStats[cid] = {
+          id: cid,
+          username: quiz.creator.username,
+          avatar: quiz.creator.avatar,
+          followers: 0,
+          total_plays: 0,
+          public_quizzes: 0
+        };
+      }
+      creatorStats[cid].public_quizzes += 1;
+      creatorStats[cid].total_plays += quiz.play_count;
+    });
+
+    const creators = Object.values(creatorStats)
+      .sort((a, b) => b.total_plays - a.total_plays)
+      .slice(0, 10)
+      .map((c, i) => ({
+        ...c,
+        followers: Math.max(100, c.total_plays * 2 + c.public_quizzes * 50)
+      }));
+
+    let total_plays = 0;
+    Object.values(playCountMap).forEach((n) => { total_plays += n; });
+
+    res.json({
+      stats: {
+        total_quizzes: normalized.length,
+        total_plays
+      },
+      quizzes: normalized,
+      creators
+    });
+  } catch (e) {
+    console.error('Discover API error:', e);
+    res.status(500).json({ error: 'Server xatosi' });
+  }
+});
 
 // Barcha quizlarni olish
 app.get('/api/quizzes', async (req, res) => {
@@ -49,6 +271,20 @@ app.get('/api/quizzes', async (req, res) => {
 // Bitta quizni savollar bilan olish
 app.get('/api/quiz/:id', async (req, res) => {
   const { id } = req.params;
+  if (id === 'mock_quiz_001') {
+    return res.json({
+      ...MOCK_QUIZ,
+      questions: MOCK_QUESTIONS.map((q) => ({
+        id: q.id,
+        question: q.question,
+        options: q.options,
+        correct_index: q.correct_index,
+        correct: q.correctOption,
+        explanation: q.explanation
+      }))
+    });
+  }
+
   const { data: quiz, error: quizError } = await supabase
     .from('quizzes').select('*').eq('id', id).single();
   if (quizError) return res.status(404).json({ error: 'Quiz topilmadi' });
@@ -58,6 +294,63 @@ app.get('/api/quiz/:id', async (req, res) => {
   if (qError) return res.status(500).json({ error: qError.message });
 
   res.json({ ...quiz, questions });
+});
+
+// Quiz savollarini alohida olish (for Quiz Gameplay)
+app.get('/api/quiz/:id/questions', async (req, res) => {
+  const { id } = req.params;
+  if (id === 'mock_quiz_001') {
+    return res.json({ questions: MOCK_QUESTIONS.map((q) => ({
+      id: q.id,
+      type: q.type,
+      question: q.question,
+      options: q.options,
+      correctOption: q.correctOption,
+      timeLimit: q.timeLimit,
+      explanation: q.explanation
+    })) });
+  }
+
+  const { data: questions, error } = await supabase
+    .from('questions')
+    .select('*')
+    .eq('quiz_id', id)
+    .order('order_num');
+  
+  if (error) return res.status(500).json({ error: error.message });
+  
+  // Transform questions to match frontend format
+  const transformedQuestions = (questions || []).map(q => ({
+    id: q.id,
+    type: 'multiple_choice',
+    question: q.question,
+    options: q.options || [],
+    correctOption: q.correct_index || 0,
+    timeLimit: 30,
+    explanation: q.explanation || null
+  }));
+  
+  res.json({ questions: transformedQuestions });
+});
+
+// Quiz natijalarini yuborish (for Quiz Gameplay)
+app.post('/api/quiz/results', async (req, res) => {
+  try {
+    const { quizId, totalCorrect, totalXP, maxStreak, answers, timeSpent } = req.body;
+    
+    // TODO: Save to Supabase when user authentication is ready
+    // For now, just acknowledge receipt
+    console.log('[Quiz Results]', { quizId, totalCorrect, totalXP, maxStreak, timeSpent });
+    
+    res.json({ 
+      success: true, 
+      message: 'Results received',
+      data: { quizId, totalCorrect, totalXP, maxStreak }
+    });
+  } catch (error) {
+    console.error('[Quiz Results Error]', error);
+    res.status(500).json({ error: 'Failed to save results' });
+  }
 });
 
 // Yangi quiz yaratish
@@ -72,7 +365,9 @@ app.post('/api/quiz', authMiddleware, async (req, res) => {
       title,
       category: category || 'general',
       mode: mode || 'classic',
-      teacher_id: req.user.id
+      teacher_id: req.user.id,
+      is_published: false,
+      published_at: null
     })
     .select().single();
   if (quizError) return res.status(500).json({ error: quizError.message });
@@ -95,7 +390,7 @@ app.post('/api/quiz', authMiddleware, async (req, res) => {
 app.get('/api/my-quizzes', authMiddleware, async (req, res) => {
   const { data, error } = await supabase
     .from('quizzes')
-    .select('id, title, category, mode, created_at')
+    .select('id, title, category, mode, created_at, is_published, published_at')
     .eq('teacher_id', req.user.id)
     .order('created_at', { ascending: false });
   if (error) return res.status(500).json({ error: error.message });
@@ -115,7 +410,9 @@ app.get('/api/my-quizzes', authMiddleware, async (req, res) => {
       ...q,
       quiz_id: q.id,
       question_count: qCount || 0,
-      play_count: playCount || 0
+      play_count: playCount || 0,
+      is_published: !!q.is_published,
+      published_at: q.published_at || null
     };
   }));
 
@@ -178,6 +475,49 @@ app.delete('/api/quiz/:id', authMiddleware, async (req, res) => {
   const { error } = await supabase.from('quizzes').delete().eq('id', id);
   if (error) return res.status(500).json({ error: error.message });
   res.json({ success: true });
+});
+
+// Quiz nashr qilish (publish)
+app.post('/api/quiz/:id/publish', authMiddleware, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const { data: quiz } = await supabase
+      .from('quizzes').select('teacher_id, is_published').eq('id', id).single();
+    if (!quiz) return res.status(404).json({ error: 'Quiz topilmadi' });
+    if (quiz.teacher_id !== req.user.id)
+      return res.status(403).json({ error: "Ruxsat yo'q" });
+
+    if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      console.error('Publish failed: SUPABASE_SERVICE_ROLE_KEY is not configured. Current key is anon, which may be blocked by RLS.');
+      return res.status(500).json({ error: 'Server sozlanishi xatosi: nashr qilish uchun SUPABASE_SERVICE_ROLE_KEY kerak' });
+    }
+
+    // Count questions — must have at least 1
+    const { count } = await supabase
+      .from('questions').select('*', { count: 'exact', head: true }).eq('quiz_id', id);
+    if (!count || count < 1)
+      return res.status(400).json({ error: "Nashr qilish uchun kamida 1 ta savol kerak" });
+
+    const { data: updatedRows, error: updateError } = await supabase
+      .from('quizzes')
+      .update({ is_published: true, published_at: new Date().toISOString() })
+      .eq('id', id)
+      .select('id,is_published,published_at');
+
+    if (updateError) {
+      console.error('Publish update error:', updateError);
+      return res.status(500).json({ error: updateError.message });
+    }
+    if (!updatedRows || updatedRows.length === 0) {
+      console.error('Publish update returned no rows:', { id, quiz, updatedRows });
+      return res.status(500).json({ error: 'Nashr qilishda xatolik yuz berdi' });
+    }
+
+    res.json({ success: true, published_at: updatedRows[0].published_at });
+  } catch (e) {
+    console.error('Publish error:', e);
+    res.status(500).json({ error: 'Server xatosi' });
+  }
 });
 
 // Quiz tahrirlash
@@ -517,20 +857,16 @@ function sendQuestion(code) {
   const q = session.questions[session.current_question];
   if (!q) return endGame(code);
 
-  // Reset answered state — faqat tirik o'yinchilar uchun
   Object.values(session.players).forEach(p => {
-    if (session.eliminated?.[p.socket_id]) {
-      p.answered = true; // eliminatedlar javob bera olmaydi
-    } else {
-      p.answered = false;
-      p.last_answer = null;
-    }
+    p.answered = !!session.eliminated[p.socket_id];
+    p.last_answer = null;
   });
 
   session.revealed = false;
   session.timeLeft = 20;
 
-  io.to(`session:${code}`).emit('game:question', {
+  // Teacher ga to'liq ma'lumot
+  io.to(`teacher:${code}`).emit('game:question', {
     index: session.current_question,
     total: session.questions.length,
     question: q.question,
@@ -538,6 +874,21 @@ function sendQuestion(code) {
     time: 20,
     category: session.category || 'general',
     mode: session.mode || 'classic'
+  });
+
+  // Faqat TIRIK o'yinchilarga savol jo'natish
+  Object.entries(session.players).forEach(([sid, player]) => {
+    if (!session.eliminated[sid]) {
+      io.to(sid).emit('game:question', {
+        index: session.current_question,
+        total: session.questions.length,
+        question: q.question,
+        options: q.options,
+        time: 20,
+        category: session.category || 'general',
+        mode: session.mode || 'classic'
+      });
+    }
   });
 
   clearInterval(session.timer);
@@ -560,7 +911,6 @@ function revealAnswer(code) {
   const q = session.questions[session.current_question];
   if (!q) return;
 
-  // Survival: javob bermaganlar ham chiqadi
   if (session.mode === 'survival') {
     Object.entries(session.players).forEach(([sid, player]) => {
       if (!player.answered && !session.eliminated[sid]) {
@@ -574,15 +924,13 @@ function revealAnswer(code) {
     });
   }
 
-  const stats = session.answer_stats[session.current_question] || [0, 0, 0, 0];
-
   io.to(`session:${code}`).emit('game:reveal', {
     correct_index: q.correct_index,
     category: session.category,
-    stats
+    stats: session.answer_stats[session.current_question] || [0, 0, 0, 0]
   });
 
-  // === LIVE RANKING EMIT ===
+  // Live ranking
   const ranking = Object.values(session.players)
     .sort((a, b) => b.score - a.score)
     .map((p, i) => ({
@@ -595,18 +943,17 @@ function revealAnswer(code) {
 
   io.to(`session:${code}`).emit('game:ranking', { ranking });
 
-  // === AUTO-NEXT: 4 soniyadan keyin ===
+  // Auto-next: 4 soniya
   setTimeout(() => {
     const sess = activeSessions[code];
     if (!sess || sess.status !== 'playing') return;
-    
     sess.current_question++;
     if (sess.current_question >= sess.questions.length) {
       endGame(code);
     } else {
       sendQuestion(code);
     }
-  }, 4000); // 4 soniya — o'qituvchi natijani ko'rsin
+  }, 4000);
 }
 
 async function endGame(code) {

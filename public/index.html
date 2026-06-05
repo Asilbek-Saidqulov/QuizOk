@@ -46,17 +46,18 @@
 ============================================================ */
 :root{
   --bg:#060610;
-  --s1:#0e0e1e;
-  --s2:#161628;
-  --s3:#1e1e34;
+  --s1:#0b1426;
+  --s2:#111c33;
+  --s3:#18284a;
   --bd:#ffffff12;
   --bd2:#ffffff1e;
 
-  --p:#7c6cfa;   /* violet */
-  --p2:#a78bfa;
-  --pg:linear-gradient(135deg,#7c6cfa,#c084fc);
 
-  --ai:#00e5c3;  /* AI teal — the star */
+  --p:#00aaff;
+  --p2:#66d9ff;
+  --pg:linear-gradient(135deg,#00aaff,#00e5ff);
+
+  --ai:#00e5c3;
   --ai2:#34d9b5;
   --aig:linear-gradient(135deg,#00e5c3,#0ea5e9);
 
@@ -65,9 +66,9 @@
   --red:#f87171;
   --green:#4ade80;
 
-  --t1:#f4f4ff;
-  --t2:#9090b8;
-  --t3:#5a5a80;
+  --t1:#f8fbff;
+  --t2:#9aa8c7;
+  --t3:#5f7197;
 
   --r:14px;
   --r2:20px;
@@ -77,7 +78,7 @@
   --mono:'JetBrains Mono',monospace;
 }
 
-*{box-sizing:border-box;margin:0;padding:0}
+*{box-sizing:content-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{
   font-family:var(--font);
@@ -91,15 +92,15 @@ body{
 body::before{
   content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   background-image:
-    radial-gradient(circle 800px at 20% 20%,#7c6cfa18,transparent),
+    radial-gradient(circle 800px at 20% 20%,#00aaff18,transparent),
     radial-gradient(circle 600px at 80% 80%,#00e5c314,transparent),
-    radial-gradient(circle 400px at 50% 50%,#c084fc08,transparent);
+    radial-gradient(circle 400px at 50% 50%,#00e5ff08,transparent);
 }
 body::after{
   content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   background-image:
-    linear-gradient(rgba(124,108,250,.04) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(124,108,250,.04) 1px,transparent 1px);
+    linear-gradient(rgba(0,170,255,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,170,255,.04) 1px,transparent 1px);
   background-size:48px 48px;
 }
 
@@ -124,12 +125,31 @@ body::after{
   font-family:var(--font);font-size:14px;font-weight:700;
   cursor:pointer;transition:all .2s;white-space:nowrap;text-decoration:none;
 }
-.btn-primary{background:var(--pg);color:#fff}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 30px #7c6cfa40}
+.btn-primary{
+  background:linear-gradient(
+      135deg,
+      #009dff,
+      #00c8ff
+  );
+
+  color:white;
+
+  border:1px solid rgba(255,255,255,.08);
+
+  box-shadow:
+      0 0 20px rgba(0,170,255,.15),
+      inset 0 1px 0 rgba(255,255,255,.1);
+}
+.btn-primary:hover{
+  transform:translateY(-3px);
+
+  box-shadow:
+      0 10px 40px rgba(0,170,255,.35);
+}
 .btn-ai{background:var(--aig);color:#02100d}
 .btn-ai:hover{transform:translateY(-2px);box-shadow:0 12px 30px #00e5c340}
 .btn-ghost{background:transparent;border:1px solid var(--bd2);color:var(--t1)}
-.btn-ghost:hover{border-color:var(--p);color:var(--p2)}
+.btn-ghost:hover{border-color:var(--p);color:var(--p2); box-shadow:0 0 40px rgba(0,170,255,.08)}
 .btn-red{background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.25);color:var(--red)}
 .btn-red:hover{background:rgba(248,113,113,.2)}
 .btn-muted{background:var(--s2);border:1px solid var(--bd);color:var(--t2)}
@@ -146,7 +166,7 @@ body::after{
   color:var(--t1);font-family:var(--font);font-size:14px;
   outline:none;transition:border-color .2s;
 }
-.inp:focus{border-color:var(--p)}
+.inp:focus{border-color:var(--p); box-shadow:0 0 40px rgba(0,170,255,.08)}
 .inp::placeholder{color:var(--t3)}
 .inp-ai:focus{border-color:var(--ai)}
 textarea.inp{resize:vertical;min-height:120px;line-height:1.6}
@@ -167,8 +187,8 @@ select.inp{cursor:pointer}
   display:inline-flex;align-items:center;gap:5px;
   padding:4px 12px;border-radius:30px;font-size:12px;font-weight:600;
 }
-.badge-ai{background:rgba(0,229,195,.12);border:1px solid rgba(0,229,195,.25);color:var(--ai)}
-.badge-purple{background:rgba(124,108,250,.12);border:1px solid rgba(124,108,250,.25);color:var(--p2)}
+.badge-ai{background:rgba(0,170,255,.12);border:1px solid rgba(0,170,255,.25);color:var(--p)}
+.badge-purple{background:rgba(0,170,255,.12);border:1px solid rgba(0,170,255,.25);color:var(--p2)}
 .badge-green{background:rgba(74,222,128,.12);border:1px solid rgba(74,222,128,.25);color:var(--green)}
 .badge-pink{background:rgba(244,114,182,.12);border:1px solid rgba(244,114,182,.25);color:var(--pink)}
 
@@ -178,7 +198,7 @@ select.inp{cursor:pointer}
   margin-top:10px;display:none;
 }
 .msg.error{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.25);color:var(--red)}
-.msg.success{background:rgba(0,229,195,.1);border:1px solid rgba(0,229,195,.25);color:var(--ai)}
+.msg.success{background:rgba(0,170,255,.1);border:1px solid rgba(0,170,255,.25);color:var(--p)}
 .msg.show{display:block}
 
 /* TOAST */
@@ -193,7 +213,7 @@ select.inp{cursor:pointer}
   display:flex;align-items:center;gap:10px;
 }
 .toast.show{transform:translateX(-50%) translateY(0)}
-.toast.success{border-color:rgba(0,229,195,.4);color:var(--ai)}
+.toast.success{border-color:rgba(0,170,255,.4);color:var(--p)}
 .toast.error{border-color:rgba(248,113,113,.4);color:var(--red)}
 
 /* LOADING DOTS */
@@ -225,10 +245,12 @@ select.inp{cursor:pointer}
 }
 .topbar-logo{
   font-size:20px;font-weight:800;letter-spacing:-.5px;
+  text-shadow:0 0 20px rgba(0,170,255,.25);
   background:var(--pg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
 .topbar-sep{width:1px;height:18px;background:var(--bd2)}
 .topbar-label{font-size:13px;color:var(--t3);font-weight:500}
+.topbar-links{display:flex;align-items:center;gap:10px;}
 .topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
 .ham{
   background:var(--s2);border:1px solid var(--bd);color:var(--t1);
@@ -236,7 +258,7 @@ select.inp{cursor:pointer}
   display:flex;align-items:center;justify-content:center;font-size:16px;
   transition:all .2s;flex-shrink:0;
 }
-.ham:hover{border-color:var(--p);color:var(--p2)}
+.ham:hover{border-color:var(--p);color:var(--p2); box-shadow:0 0 40px rgba(0,170,255,.08)}
 
 /* ============================================================
    SIDEBAR
@@ -261,6 +283,7 @@ select.inp{cursor:pointer}
 .sb-x{
   background:var(--s2);border:1px solid var(--bd);color:var(--t2);
   width:30px;height:30px;border-radius:8px;cursor:pointer;
+  text-shadow:0 0 20px rgba(0,170,255,.25);
   font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .2s;
 }
 .sb-x:hover{color:var(--t1)}
@@ -313,7 +336,7 @@ select.inp{cursor:pointer}
   z-index:2;
 }
 
-.land-logo{font-size:26px;font-weight:800;background:var(--pg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.land-logo{font-size:26px;font-weight:800;background:var(--pg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; text-shadow:0 0 20px rgba(0,170,255,.25);}
 .land-nav-btns{display:flex;gap:10px;align-items:center}
 
 /* HERO */
@@ -324,7 +347,7 @@ select.inp{cursor:pointer}
 }
 .hero-eyebrow{
   display:inline-flex;align-items:center;gap:8px;
-  background:rgba(0,229,195,.08);border:1px solid rgba(0,229,195,.2);
+  background:rgba(0,170,255,.08); border:1px solid rgba(0,170,255,.25); color:#66d9ff;
   padding:6px 16px;border-radius:30px;
   font-size:13px;font-weight:600;color:var(--ai);margin-bottom:24px;
 }
@@ -379,7 +402,7 @@ select.inp{cursor:pointer}
 }
 .ai-q-num{
   min-width:22px;height:22px;border-radius:6px;
-  background:rgba(124,108,250,.2);color:var(--p2);
+  background:rgba(0,170,255,.2);color:var(--p2);
   display:flex;align-items:center;justify-content:center;
   font-size:11px;font-weight:800;flex-shrink:0;
 }
@@ -388,13 +411,13 @@ select.inp{cursor:pointer}
 
 /* Floating accents */
 .float-acc{
-  position:absolute;background:var(--s2);border:1px solid var(--bd2);
+  position:unset;background:var(--s2);border:1px solid var(--bd2);
   border-radius:12px;padding:10px 16px;font-size:13px;font-weight:600;
   white-space:nowrap;box-shadow:0 8px 24px #00000040;
   animation:floatUp 3s ease-in-out infinite;
 }
 .fa1{top:-20px;right:-20px;animation-delay:0s;color:var(--ai);border-color:rgba(0,229,195,.25)}
-.fa2{bottom:60px;left:-30px;animation-delay:1.2s;color:var(--p2);border-color:rgba(124,108,250,.25)}
+.fa2{bottom:60px;left:-30px;animation-delay:1.2s;color:var(--p2);border-color:rgba(0,170,255,.25)}
 .fa3{bottom:-14px;right:30px;animation-delay:2.2s;color:var(--gold);border-color:rgba(251,191,36,.25)}
 @keyframes floatUp{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 
@@ -409,11 +432,77 @@ select.inp{cursor:pointer}
   display:grid;grid-template-columns:repeat(4,1fr);gap:20px;
 }
 .how-step{
-  background:var(--s1);border:1px solid var(--bd);
-  border-radius:var(--r2);padding:28px 24px;
-  position:relative;transition:all .3s;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(17,28,51,.95),
+      rgba(11,20,38,.95)
+    );
+
+  border:
+    1px solid rgba(255,255,255,.06);
+
+  backdrop-filter:blur(18px);
+
+  overflow:hidden;
+
+  transition:.35s;
+
+  position:relative;
+
+  padding:36px 30px;
+  
+  text-align:center;
+
+  display:flex;
+  
+  flex-direction:column;
+  
+  align-items:center;
+
 }
-.how-step:hover{border-color:rgba(0,229,195,.25);transform:translateY(-4px)}
+.feat{
+  border-radius:28px;
+  padding:28px;
+}
+
+.how-step::before{
+  content:'';
+
+  position:absolute;
+
+  top:0;
+  left:0;
+  right:0;
+
+  height:2px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      #00aaff,
+      transparent
+    );
+
+  opacity:0;
+
+  transition:.35s;
+}
+.how-step:hover{
+  transform:
+    translateY(-10px);
+
+  border-color:
+    rgba(0,170,255,.35);
+
+  box-shadow:
+    0 20px 60px rgba(0,170,255,.18);
+}
+
+.how-step:hover::before{
+  opacity:1;
+}
 .how-step::after{
   content:attr(data-arrow);position:absolute;
   right:-18px;top:50%;transform:translateY(-50%);
@@ -421,16 +510,69 @@ select.inp{cursor:pointer}
 }
 .how-step:last-child::after{display:none}
 .how-num{
-  width:36px;height:36px;border-radius:10px;
-  background:var(--aig);color:#02100d;
-  display:flex;align-items:center;justify-content:center;
-  font-size:15px;font-weight:800;margin-bottom:14px;
+  width:70px;
+  height:70px;
+
+  margin:0 auto 20px;
+
+  border-radius:20px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #00aaff,
+      #00e5ff
+    );
+
+  color:white;
+
+  font-size:28px;
+  font-weight:900;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  box-shadow:
+    0 10px 30px rgba(0,170,255,.35);
+
+  position:relative;
 }
 .how-icon{font-size:28px;margin-bottom:10px}
 .how-step-title{font-size:16px;font-weight:700;margin-bottom:8px}
-.how-step-desc{font-size:13px;color:var(--t2);line-height:1.6}
-.how-step.ai-step{border-color:rgba(0,229,195,.15)}
-.how-step.ai-step:hover{border-color:rgba(0,229,195,.4);box-shadow:0 0 40px rgba(0,229,195,.06)}
+.how-step-desc{font-size:13px;color:var(--t2);line-height:1.6; text-align: center;}
+.how-step.ai-step{
+  border:1px solid rgba(0,229,195,.25);
+}
+.how-step.ai-step{
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0,229,195,.04),
+      rgba(11,20,38,.95)
+    );
+
+  position:relative;
+}
+.how-step.ai-step::before{
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      #00e5c3,
+      transparent
+    );
+
+  opacity:1;
+}
+.how-step.ai-step:hover{
+  border-color:rgba(0,229,195,.5);
+
+  box-shadow:
+    0 20px 60px rgba(0,229,195,.12);
+
+  transform:translateY(-10px);
+}
 
 /* FEATURES */
 .feats{
@@ -438,11 +580,66 @@ select.inp{cursor:pointer}
   display:grid;grid-template-columns:repeat(3,1fr);gap:18px;
 }
 .feat{
-  background:var(--s1);border:1px solid var(--bd);
-  border-radius:var(--r2);padding:28px;transition:all .3s;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.03),
+      rgba(255,255,255,.01)
+    );
+
+  border:1px solid rgba(255,255,255,.08);
+
+  backdrop-filter:blur(18px);
+
+  border-radius:24px;
+
+  padding:28px;
+
+  transition:all .35s ease;
+
+  position:relative;
+
+  overflow:hidden;
 }
-.feat:hover{border-color:rgba(124,108,250,.25);transform:translateY(-3px)}
-.feat-icon{font-size:30px;margin-bottom:14px}
+.feat::before{
+  content:'';
+
+  position:absolute;
+
+  inset:0;
+
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(0,170,255,.12),
+      transparent 45%
+    );
+
+  opacity:0;
+
+  transition:.35s;
+}
+.feat:hover{
+  transform:
+    translateY(-8px)
+    scale(1.02);
+
+  border-color:
+    rgba(0,170,255,.35);
+
+  box-shadow:
+    0 20px 60px rgba(0,170,255,.15);
+}
+
+.feat:hover::before{
+  opacity:1;
+}
+.feat-icon{
+  filter:
+    drop-shadow(
+      0 0 15px rgba(0,170,255,.35)
+    );
+}
 .feat-title{font-size:16px;font-weight:700;margin-bottom:8px}
 .feat-desc{font-size:13px;color:var(--t2);line-height:1.6}
 
@@ -472,6 +669,7 @@ select.inp{cursor:pointer}
   font-size:26px;font-weight:800;
   background:var(--pg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
   text-align:center;margin-bottom:22px;
+  text-shadow:0 0 20px rgba(0,170,255,.25);
 }
 .auth-tabs{display:flex;background:var(--s2);padding:4px;border-radius:12px;margin-bottom:22px;gap:4px}
 .auth-tab{
@@ -486,13 +684,13 @@ select.inp{cursor:pointer}
   padding:12px 14px;color:var(--t1);font-family:var(--font);font-size:14px;
   outline:none;transition:border-color .2s;
 }
-.auth-field input:focus{border-color:var(--p)}
+.auth-field input:focus{border-color:var(--p); box-shadow:0 0 40px rgba(0,170,255,.08)}
 .btn-auth{
   width:100%;padding:14px;background:var(--pg);border:none;border-radius:12px;
   color:#fff;font-family:var(--font);font-size:15px;font-weight:800;
   cursor:pointer;transition:all .2s;margin-top:8px;
 }
-.btn-auth:hover{transform:translateY(-2px);box-shadow:0 8px 24px #7c6cfa40}
+.btn-auth:hover{transform:translateY(-2px);box-shadow:0 8px 24px #00aaff40}
 .auth-divider{text-align:center;margin:14px 0;position:relative}
 .auth-divider::before{content:'';position:absolute;top:50%;left:0;right:0;height:1px;background:var(--bd)}
 .auth-divider span{background:var(--s1);padding:0 12px;font-size:12px;color:var(--t3);position:relative}
@@ -555,7 +753,7 @@ select.inp{cursor:pointer}
   border-radius:var(--r2);padding:28px 24px;cursor:pointer;
   transition:all .25s;text-align:center;
 }
-.role-card:hover{transform:translateY(-4px);border-color:var(--p);box-shadow:0 20px 40px #7c6cfa18}
+.role-card:hover{transform:translateY(-4px);border-color:var(--p); box-shadow:0 0 40px rgba(0,170,255,.08)}
 .role-card.student:hover{border-color:var(--ai);box-shadow:0 20px 40px #00e5c318}
 .role-icon{font-size:38px;margin-bottom:12px;display:block}
 .role-name{font-size:17px;font-weight:800;margin-bottom:6px}
@@ -686,6 +884,7 @@ select.inp{cursor:pointer}
   width:44px;height:44px;border-radius:14px;
   background:var(--aig);display:flex;align-items:center;justify-content:center;
   font-size:22px;
+  text-shadow:0 0 20px rgba(0,170,255,.25);
 }
 .ai-panel-title{font-size:18px;font-weight:800}
 .ai-panel-sub{font-size:13px;color:var(--ai)}
@@ -796,6 +995,7 @@ select.inp{cursor:pointer}
   font-size:44px;font-weight:800;
   background:var(--pg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
   margin-bottom:8px;
+  text-shadow:0 0 20px rgba(0,170,255,.25);
 }
 .join-sub{color:var(--t2);font-size:15px;margin-bottom:40px}
 .join-form{width:100%;max-width:360px}
@@ -850,8 +1050,8 @@ select.inp{cursor:pointer}
   border-radius:var(--r2);padding:32px;text-align:center;margin-bottom:24px;
 }
 .q-badge{
-  display:inline-block;background:rgba(124,108,250,.12);color:var(--p2);
-  border:1px solid rgba(124,108,250,.2);padding:5px 14px;border-radius:20px;
+  display:inline-block;background:rgba(0,170,255,.12);color:var(--p2);
+  border:1px solid rgba(0,170,255,.2);padding:5px 14px;border-radius:20px;
   font-size:12px;font-weight:600;margin-bottom:14px;letter-spacing:1px;text-transform:uppercase;
 }
 .q-big{font-size:24px;font-weight:700;line-height:1.35;overflow-y:auto;max-height:180px}
@@ -862,7 +1062,7 @@ select.inp{cursor:pointer}
   font-family:var(--font);font-size:15px;font-weight:500;
   text-align:left;position:relative;overflow:hidden;color:var(--t1);transition:all .4s;
 }
-.ans-btn:nth-child(1){background:rgba(124,108,250,.07);border-color:rgba(124,108,250,.25)}
+.ans-btn:nth-child(1){background:rgba(0,170,255,.07);border-color:rgba(0,170,255,.25)}
 .ans-btn:nth-child(2){background:rgba(244,114,182,.07);border-color:rgba(244,114,182,.25)}
 .ans-btn:nth-child(3){background:rgba(0,229,195,.07);border-color:rgba(0,229,195,.25)}
 .ans-btn:nth-child(4){background:rgba(251,191,36,.07);border-color:rgba(251,191,36,.25)}
@@ -873,7 +1073,7 @@ select.inp{cursor:pointer}
   display:flex;align-items:center;justify-content:center;
   font-size:13px;font-weight:800;flex-shrink:0;
 }
-.ans-btn:nth-child(1) .ans-letter{background:rgba(124,108,250,.3);color:#b8b4ff}
+.ans-btn:nth-child(1) .ans-letter{background:rgba(0,170,255,.3);color:#b8b4ff}
 .ans-btn:nth-child(2) .ans-letter{background:rgba(244,114,182,.3);color:#ffb3d0}
 .ans-btn:nth-child(3) .ans-letter{background:rgba(0,229,195,.3);color:#7fffd4}
 .ans-btn:nth-child(4) .ans-letter{background:rgba(251,191,36,.3);color:#ffe08a}
@@ -908,7 +1108,7 @@ select.inp{cursor:pointer}
   min-height:80px;display:flex;flex-direction:column;
   align-items:center;justify-content:center;gap:6px;
 }
-.sg-opt:nth-child(1){background:rgba(124,108,250,.08);border-color:rgba(124,108,250,.3)}
+.sg-opt:nth-child(1){background:rgba(0,170,255,.08);border-color:rgba(0,170,255,.3)}
 .sg-opt:nth-child(2){background:rgba(244,114,182,.08);border-color:rgba(244,114,182,.3)}
 .sg-opt:nth-child(3){background:rgba(0,229,195,.08);border-color:rgba(0,229,195,.3)}
 .sg-opt:nth-child(4){background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.3)}
@@ -989,11 +1189,11 @@ select.inp{cursor:pointer}
   border-radius:16px;padding:18px 20px;
   display:flex;align-items:center;gap:16px;transition:all .2s;
 }
-.qz-card:hover{border-color:rgba(124,108,250,.3);transform:translateX(4px)}
+.qz-card:hover{border-color:rgba(0,170,255,.3);transform:translateX(4px)}
 .qz-icon{
   width:48px;height:48px;border-radius:14px;
-  background:linear-gradient(135deg,rgba(124,108,250,.15),rgba(167,139,250,.1));
-  border:1px solid rgba(124,108,250,.2);
+  background:linear-gradient(135deg,rgba(0,170,255,.15),rgba(167,139,250,.1));
+  border:1px solid rgba(0,170,255,.2);
   display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;
 }
 .qz-info{flex:1;min-width:0}
@@ -1006,10 +1206,15 @@ select.inp{cursor:pointer}
   color:var(--t2);font-family:var(--font);transition:all .2s;
   display:flex;align-items:center;gap:6px;
 }
-.qz-btn:hover{border-color:var(--p2);color:var(--p2)}
-.qz-btn.play{background:rgba(0,229,195,.08);border-color:rgba(0,229,195,.25);color:var(--ai)}
-.qz-btn.play:hover{background:rgba(0,229,195,.15)}
+.qz-btn:hover{border-color:var(--p2);color:var(--p2); box-shadow:0 0 40px rgba(0,170,255,.08)}
+.qz-btn.play{background:rgba(0,170,255,.08);border-color:rgba(0,170,255,.25);color:var(--p)}
+.qz-btn.play:hover{background:rgba(0,170,255,.15)}
 .qz-btn.del:hover{border-color:var(--red);color:var(--red)}
+.qz-btn.publish{background:rgba(74,222,128,.08);border-color:rgba(74,222,128,.25);color:var(--green)}
+.qz-btn.publish:hover{background:rgba(74,222,128,.18)}
+.qz-btn.publish:disabled{opacity:.5;cursor:not-allowed}
+.badge-draft{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3);color:#fbbf24}
+.badge-published{background:rgba(74,222,128,.12);border:1px solid rgba(74,222,128,.25);color:var(--green)}
 .empty-state{
   text-align:center;padding:60px 20px;
   background:var(--s1);border:1px dashed var(--bd2);border-radius:var(--r2);
@@ -1118,7 +1323,7 @@ select.inp{cursor:pointer}
   font-size:22px;display:flex;align-items:center;justify-content:center;
   cursor:pointer;transition:all .2s;
 }
-.em-opt:hover{border-color:var(--p2);background:rgba(124,108,250,.1);transform:scale(1.1)}
+.em-opt:hover{border-color:var(--p2);background:rgba(0,170,255,.1);transform:scale(1.1); box-shadow:0 0 40px rgba(0,170,255,.08)}
 .em-opt.selected{border-color:var(--ai);background:rgba(0,229,195,.1);box-shadow:0 0 0 2px rgba(0,229,195,.25)}
 .profile-right{display:flex;flex-direction:column;gap:14px}
 .pfc{background:var(--s1);border:1px solid var(--bd);border-radius:16px;overflow:hidden}
@@ -1133,7 +1338,28 @@ select.inp{cursor:pointer}
    RESPONSIVE
 ============================================================ */
 @media(max-width:900px){
-  .hero-wrap{grid-template-columns:1fr;padding:50px 24px 40px;gap:40px}
+  .hero-wrap::before{
+    content:'';
+
+    position:absolute;
+
+    width:500px;
+    height:500px;
+
+    right:-150px;
+    top:-100px;
+
+    background:
+    radial-gradient(
+      circle,
+      rgba(0,170,255,.18),
+      transparent 70%
+    );
+
+    filter:blur(70px);
+
+    z-index:-1;
+  }
   .hero-title{font-size:40px}
   .how-steps{grid-template-columns:1fr 1fr}
   .feats{grid-template-columns:1fr 1fr;padding:0 24px 60px}
@@ -1160,8 +1386,8 @@ select.inp{cursor:pointer}
 }
 .rank-cat-btn:hover { border-color: var(--p2); color: var(--p2); }
 .rank-cat-btn.active {
-  background: rgba(124,108,250,.12);
-  border-color: rgba(124,108,250,.4); color: var(--p2);
+  background: rgba(0,170,255,.12);
+  border-color: rgba(0,170,255,.4); color: var(--p2);
 }
 .rank-row {
   display: grid;
@@ -1174,7 +1400,7 @@ select.inp{cursor:pointer}
 .rank-row.top1 { background: rgba(251,191,36,.05); }
 .rank-row.top2 { background: rgba(200,200,200,.03); }
 .rank-row.top3 { background: rgba(205,127,50,.04); }
-.rank-row.mine { background: rgba(124,108,250,.06); border-left: 2px solid var(--p); }
+.rank-row.mine{ background: rgba(0,170,255,.08); border-left:3px solid #00aaff;}
 
 .cat-sel-btn {
   padding: 8px 16px; border-radius: 30px;
@@ -1184,8 +1410,8 @@ select.inp{cursor:pointer}
 }
 .cat-sel-btn:hover { border-color: var(--p2); color: var(--p2); }
 .cat-sel-btn.active {
-  background: rgba(124,108,250,.12);
-  border-color: rgba(124,108,250,.4); color: var(--p2);
+  background: rgba(0,170,255,.12);
+  border-color: rgba(0,170,255,.4); color: var(--p2);
 }
 
 /* DYNAMIC BACKGROUNDS */
@@ -1225,8 +1451,8 @@ select.inp{cursor:pointer}
 }
 .bg-business::before {
   background-image:
-    radial-gradient(circle 800px at 20% 20%, #c084fc18, transparent),
-    radial-gradient(circle 600px at 80% 80%, #7c6cfa14, transparent) !important;
+    radial-gradient(circle 800px at 20% 20%, #00e5ff18, transparent),
+    radial-gradient(circle 600px at 80% 80%, #00aaff14, transparent) !important;
 }
 
 .bg-ielts {
@@ -1277,8 +1503,9 @@ body { transition: background 1.2s ease; }
 }
 .mode-card:hover { border-color: var(--p2); }
 .mode-card.active {
-  border-color: rgba(0,229,195,.5);
-  background: rgba(0,229,195,.06);
+  background: rgba(8,15,35,.88);
+  border: 1px solid rgba(0,170,255,.15);
+  backdrop-filter: blur(18px);
 }
 .mode-card.active div:nth-child(2) { color: var(--ai); }
 
@@ -1297,6 +1524,7 @@ body { transition: background 1.2s ease; }
   <nav class="land-nav">
     <div class="land-logo">QuizOk</div>
     <div class="land-nav-btns">
+      <a href="/discover.html" class="btn btn-ghost" style="text-decoration:none">Discover</a>
       <button class="btn btn-ghost" onclick="showAuth('login')">Kirish</button>
       <button class="btn btn-primary" onclick="showAuth('register')">Bepul boshlash</button>
     </div>
@@ -1485,6 +1713,13 @@ body { transition: background 1.2s ease; }
   <nav class="topbar">
     <button class="ham" onclick="openSidebar()">☰</button>
     <div class="topbar-logo">QuizOk</div>
+    <div class="topbar-links">
+      <button class="btn btn-ghost btn-sm" onclick="showScreen('home')">Home</button>
+      <button class="btn btn-ghost btn-sm" onclick="window.location.href='/discover.html'">Discover</button>
+      <button class="btn btn-ghost btn-sm" onclick="showScreen('join')">Join a Game</button>
+      <button class="btn btn-ghost btn-sm" onclick="showScreen('my-quizzes')">My Quizzes</button>
+      <button class="btn btn-ghost btn-sm" onclick="showScreen('teacher')">Create Quiz</button>
+    </div>
     <div class="topbar-right">
       <span style="font-size:14px;color:var(--t3);font-weight:500" id="navUserName">👤</span>
       <button class="btn btn-ghost btn-sm" onclick="doLogout()">Chiqish</button>
@@ -2052,7 +2287,7 @@ body { transition: background 1.2s ease; }
     </div>
 
     <!-- Mening pozitsiyam -->
-    <div id="myRankCard" style="display:none;background:linear-gradient(135deg,rgba(124,108,250,.1),rgba(0,229,195,.07));border:1px solid rgba(0,229,195,.25);border-radius:16px;padding:20px;margin-bottom:20px">
+    <div id="myRankCard" style="display:none;background:linear-gradient(135deg,rgba(0,170,255,.1),rgba(0,229,195,.07));border:1px solid rgba(0,229,195,.25);border-radius:16px;padding:20px;margin-bottom:20px">
       <div style="font-size:12px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Mening o'rnim</div>
       <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
         <div style="font-size:42px;font-weight:800;color:var(--p2)" id="myRankNum">—</div>
@@ -2161,6 +2396,7 @@ body { transition: background 1.2s ease; }
   <nav class="sb-nav">
     <div class="sb-section">Asosiy</div>
     <button class="sb-item ai-item" onclick="closeSidebar();openAIModal()"><span class="sb-item-icon">✦</span> AI Quiz Builder</button>
+    <button class="sb-item" onclick="window.location.href='/discover.html'"><span class="sb-item-icon">✦</span> Discover</button>
     <button class="sb-item" onclick="sidebarGo('home')"><span class="sb-item-icon">🏠</span> Bosh sahifa</button>
     <button class="sb-item" onclick="sidebarGo('teacher')"><span class="sb-item-icon">➕</span> Yangi quiz</button>
     <button class="sb-item" onclick="sidebarGo('my-quizzes')"><span class="sb-item-icon">📚</span> Mening quizlarim</button>
@@ -2213,6 +2449,34 @@ function showScreen(id){
   if(next) next.classList.add('active');
   window.scrollTo(0,0);
 }
+
+/* ============================================================
+   URL PARAM: ?screen=<id>  — navigated from Discover or external links.
+   Runs once on load; cleans the URL so refresh doesn't retrigger.
+   Preserves the current authenticated session.
+============================================================ */
+(function handleScreenParam() {
+  const params = new URLSearchParams(window.location.search);
+  const screen = params.get('screen');
+  if (!screen) return;
+  history.replaceState({}, '', '/');
+  setTimeout(() => {
+    if (screen === 'teacher') {
+      // Must be logged in to create a quiz
+      if (!state.user || state.user.guest) {
+        showScreen('landing');
+        showAuth('login');
+        // After login, open the builder
+        window._pendingScreen = 'teacher';
+        return;
+      }
+      showScreen('home');
+      openAIModal();
+    } else {
+      showScreen(screen);
+    }
+  }, 150);
+})();
 function showMsg(id,text){
   const el=document.getElementById(id);
   if(!el)return;
@@ -2265,7 +2529,19 @@ async function doLogin(){
     state.user=data.user;state.token=data.token;
     document.getElementById('navUserName').textContent='👤 '+(data.user.name||data.user.email);
     document.getElementById('authOverlay').classList.remove('show');
-    showScreen('home');updateHomeGreet();
+    // Handle pending actions from external navigation (Discover page links)
+    if (window._pendingPlayQuizId) {
+      const pid = window._pendingPlayQuizId;
+      window._pendingPlayQuizId = null;
+      showScreen('home'); updateHomeGreet();
+      setTimeout(() => playQuiz(pid), 200);
+    } else if (window._pendingScreen === 'teacher') {
+      window._pendingScreen = null;
+      showScreen('home'); updateHomeGreet();
+      setTimeout(() => openAIModal(), 150);
+    } else {
+      showScreen('home');updateHomeGreet();
+    }
   }catch(e){showMsg('loginErr',"Server bilan bog'lanib bo'lmadi")}
 }
 async function doRegister(){
@@ -3017,7 +3293,17 @@ async function loadMyQuizzes(){
     quizzes.forEach((q,i)=>{
       const div=document.createElement('div');div.className='qz-card';
       const created=q.created_at?new Date(q.created_at).toLocaleDateString('uz-UZ'):'—';
-      div.innerHTML=`<div class="qz-icon">${icons[i%icons.length]}</div><div class="qz-info"><div class="qz-title">${q.title||'Nomsiz quiz'}</div><div class="qz-meta"><span>❓ ${q.question_count||0} ta savol</span><span>📅 ${created}</span><span>${CAT_LABELS[q.category]||'🌍 Umumiy'}</span></div></div><div class="badge badge-green">Aktiv</div><div class="qz-actions"><button class="qz-btn play" onclick="playQuiz('${q.quiz_id}')">▶ O'yna</button><button class="qz-btn del" onclick="deleteQuiz('${q.quiz_id}',this)">🗑</button></div>`;
+      const isPublished=!!q.is_published;
+      const statusBadge=isPublished
+        ? `<span class="badge badge-published">✓ Nashr qilingan</span>`
+        : `<span class="badge badge-draft">◌ Qoralama</span>`;
+      const publishBtn=!isPublished
+        ? `<button class="qz-btn publish" onclick="publishQuiz('${q.quiz_id}',this)">🌐 Nashr</button>`
+        : '';
+      const viewBtn=isPublished
+        ? `<button class="qz-btn" onclick="viewPublishedQuiz('${q.quiz_id}')">👁 View</button>`
+        : '';
+      div.innerHTML=`<div class="qz-icon">${icons[i%icons.length]}</div><div class="qz-info"><div class="qz-title">${q.title||'Nomsiz quiz'}</div><div class="qz-meta"><span>\xe2\x9d\x93 ${q.question_count||0} ta savol</span><span>\xf0\x9f\x93\x85 ${created}</span><span>${CAT_LABELS[q.category]||'🌍 Umumiy'}</span></div></div>${statusBadge}<div class="qz-actions">${publishBtn}${viewBtn}<button class="qz-btn" onclick="previewQuiz('${q.quiz_id}','${(q.title||'').replace(/'/g,"\\'")}')">👁 Ko'rish</button><button class="qz-btn" onclick="editQuiz('${q.quiz_id}')">✏️ Tahrir</button><button class="qz-btn" onclick="duplicateQuiz('${q.quiz_id}',this)">⧉ Nusxa</button><button class="qz-btn play" onclick="playQuiz('${q.quiz_id}')">▶ O'yna</button><button class="qz-btn del" onclick="deleteQuiz('${q.quiz_id}',this)">🗑</button></div>`;
       grid.appendChild(div);
     });
   }catch(e){
@@ -3050,6 +3336,152 @@ async function deleteQuiz(quizId,btn){
     setTimeout(()=>{card.remove();loadMyQuizzes()},300);
     showToast("Quiz o'chirildi");
   }catch(e){showToast("Server bilan bog'lanib bo'lmadi",'error')}
+}
+async function publishQuiz(quizId,btn){
+  if(!state.token)return showToast("Kirish kerak",'error');
+  if(!showConfirm("Bu quizni Discover sahifasida nashr qilmoqchimisiz?"))return;
+  try{
+    btn.disabled=true;btn.textContent='⏳ ...';
+    const r=await fetch('/api/quiz/'+quizId+'/publish',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+state.token}
+    });
+    const data=await r.json();
+    if(!r.ok){btn.disabled=false;btn.textContent='🌐 Nashr';return showToast(data.error||"Nashr qilib bo'lmadi",'error');}
+    showToast("Quiz muvaffaqiyatli nashr qilindi! 🎉");
+    // Refresh the card without reloading whole list
+    const card=btn.closest('.qz-card');
+    if(card){
+      // Replace publish button with published badge inline
+      btn.remove();
+      const badge=card.querySelector('.badge-draft');
+      if(badge){badge.className='badge badge-published';badge.textContent='✓ Nashr qilingan';}
+    }
+  }catch(e){
+    if(btn){btn.disabled=false;btn.textContent='🌐 Nashr';}
+    showToast("Server bilan bog'lanib bo'lmadi",'error');
+  }
+}
+
+function viewPublishedQuiz(quizId) {
+  if (!quizId) return;
+  window.location.href = '/quiz.html?quizId=' + encodeURIComponent(quizId);
+}
+
+/* ============================================================
+   PREVIEW QUIZ
+============================================================ */
+async function previewQuiz(quizId) {
+  const modal = document.getElementById('previewModal');
+  const body = document.getElementById('previewBody');
+  if (!modal || !body) return;
+  body.innerHTML = '<div style="text-align:center;padding:40px;color:var(--t3)">⏳ Yuklanmoqda...</div>';
+  modal.style.display = 'flex';
+  try {
+    const r = await fetch('/api/quiz/' + quizId);
+    if (!r.ok) throw new Error('Quiz topilmadi');
+    const quiz = await r.json();
+    const questions = quiz.questions || [];
+    const catLabel = (typeof CAT_LABELS !== 'undefined' && CAT_LABELS[quiz.category]) || quiz.category || 'Umumiy';
+    let html = `<div style="margin-bottom:20px">
+      <h2 style="font-size:20px;font-weight:800;margin-bottom:8px">${quiz.title || 'Nomsiz quiz'}</h2>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--t2)">
+        <span>🏷️ ${catLabel}</span>
+        <span>❓ ${questions.length} ta savol</span>
+        <span>🎮 ${quiz.mode === 'survival' ? 'Survival Arena' : 'Classic'}</span>
+        ${quiz.is_published ? '<span style="color:var(--green)">✓ Nashr qilingan</span>' : '<span style="color:var(--gold)">◌ Qoralama</span>'}
+      </div>
+    </div>`;
+    if (!questions.length) {
+      html += '<div style="text-align:center;padding:24px;color:var(--t3)">❌ Savollar yo\'q</div>';
+    } else {
+      questions.forEach((q, i) => {
+        const opts = (q.options || []).map((opt, j) => {
+          const isCorrect = j === (q.correct_index ?? q.correct);
+          return `<div style="padding:8px 12px;border-radius:8px;font-size:13px;margin-bottom:6px;${isCorrect ? 'background:rgba(74,222,128,.12);border:1px solid rgba(74,222,128,.3);color:var(--green)' : 'background:var(--s2);border:1px solid var(--bd)'}">${isCorrect ? '✓ ' : ''}${opt}</div>`;
+        }).join('');
+        html += `<div style="background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:12px">
+          <div style="font-size:13px;color:var(--t3);margin-bottom:6px">Savol ${i+1}</div>
+          <div style="font-weight:600;margin-bottom:10px">${q.question}</div>
+          ${opts}
+        </div>`;
+      });
+    }
+    body.innerHTML = html;
+  } catch(e) {
+    body.innerHTML = `<div style="text-align:center;padding:40px;color:var(--red)">❌ ${e.message}</div>`;
+  }
+}
+function closePreviewModal() {
+  const modal = document.getElementById('previewModal');
+  if (modal) modal.style.display = 'none';
+}
+
+/* ============================================================
+   EDIT QUIZ
+============================================================ */
+async function editQuiz(quizId) {
+  if (!state.token) return showToast('Kirish kerak', 'error');
+  showToast('⏳ Quiz yuklanmoqda...', 'info');
+  try {
+    const r = await fetch('/api/quiz/' + quizId, {
+      headers: { 'Authorization': 'Bearer ' + state.token }
+    });
+    if (!r.ok) throw new Error('Quiz topilmadi');
+    const quiz = await r.json();
+    localQuestions = (quiz.questions || []).map(q => ({
+      question: q.question,
+      options: q.options,
+      correct: q.correct_index ?? q.correct ?? 0
+    }));
+    state.editingQuizId = quizId;
+    const titleEl = document.getElementById('quizTitle');
+    if (titleEl) titleEl.value = quiz.title || '';
+    const catBtn = document.querySelector(`[data-cat="${quiz.category}"]`);
+    if (catBtn && typeof selectCat === 'function') selectCat(quiz.category, catBtn);
+    if (typeof selectMode === 'function') selectMode(quiz.mode || 'classic');
+    if (typeof renderQuestions === 'function') renderQuestions();
+    if (typeof switchBuildTab === 'function') switchBuildTab('manual');
+    showScreen('teacher');
+    showToast('✏️ Quiz tahrirlash rejimida');
+  } catch(e) {
+    showToast('❌ ' + e.message, 'error');
+  }
+}
+
+/* ============================================================
+   DUPLICATE QUIZ
+============================================================ */
+async function duplicateQuiz(quizId, btn) {
+  if (!state.token) return showToast('Kirish kerak', 'error');
+  if (!showConfirm('Bu quizning nusxasini yaratmoqchimisiz?')) return;
+  const origText = btn.textContent;
+  btn.disabled = true; btn.textContent = '⏳ ...';
+  try {
+    const r = await fetch('/api/quiz/' + quizId, {
+      headers: { 'Authorization': 'Bearer ' + state.token }
+    });
+    if (!r.ok) throw new Error('Quiz topilmadi');
+    const quiz = await r.json();
+    const newTitle = (quiz.title || 'Quiz') + ' — Nusxa';
+    const questions = (quiz.questions || []).map(q => ({
+      question: q.question,
+      options: q.options,
+      correct: q.correct_index ?? q.correct ?? 0
+    }));
+    const r2 = await fetch('/api/quiz', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + state.token },
+      body: JSON.stringify({ title: newTitle, questions, category: quiz.category, mode: quiz.mode })
+    });
+    const data = await r2.json();
+    if (!r2.ok) throw new Error(data.error || "Nusxa yaratib bo'lmadi");
+    showToast('✓ Nusxa yaratildi: ' + newTitle);
+    await loadMyQuizzes();
+  } catch(e) {
+    showToast('❌ ' + e.message, 'error');
+    btn.disabled = false; btn.textContent = origText;
+  }
 }
 
 /* ============================================================
