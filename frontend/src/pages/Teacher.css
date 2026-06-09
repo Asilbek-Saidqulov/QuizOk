@@ -1,0 +1,163 @@
+.teacher-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.teacher-layout {
+  display: flex;
+  flex: 1;
+  margin-top: 64px;
+}
+
+.teacher-main {
+  flex: 1;
+  margin-left: 260px;
+  padding: 32px;
+  overflow-y: auto;
+}
+
+.teacher-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.teacher-header {
+  margin-bottom: 40px;
+}
+
+.teacher-title {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--t1);
+  margin: 0 0 12px;
+}
+
+.teacher-subtitle {
+  font-size: 16px;
+  color: var(--t2);
+  margin: 0;
+}
+
+.teacher-grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+}
+
+.teacher-main-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.teacher-sidebar-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.teacher-card {
+  padding: 24px;
+}
+
+.teacher-section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--t1);
+  margin: 0 0 20px;
+}
+
+.teacher-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.teacher-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.teacher-question {
+  padding: 20px;
+  background: var(--s2);
+  border: 1px solid var(--bd);
+  border-radius: var(--r);
+  margin-bottom: 16px;
+}
+
+.teacher-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.teacher-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.teacher-ai-desc {
+  font-size: 14px;
+  color: var(--t2);
+  margin: 0 0 16px;
+  line-height: 1.5;
+}
+
+.teacher-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.teacher-setting {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.teacher-setting label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--t2);
+}
+
+.teacher-setting select {
+  padding: 10px 12px;
+  background: var(--s2);
+  border: 1px solid var(--bd);
+  border-radius: var(--r);
+  color: var(--t1);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+@media (max-width: 1024px) {
+  .teacher-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .teacher-main {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .teacher-main {
+    padding: 20px;
+  }
+
+  .teacher-options {
+    grid-template-columns: 1fr;
+  }
+
+  .teacher-title {
+    font-size: 28px;
+  }
+}

@@ -1524,9 +1524,21 @@ body { transition: background 1.2s ease; }
   <nav class="land-nav">
     <div class="land-logo">QuizOk</div>
     <div class="land-nav-btns">
-      <a href="/discover.html" class="btn btn-ghost" style="text-decoration:none">Discover</a>
-      <button class="btn btn-ghost" onclick="showAuth('login')">Kirish</button>
-      <button class="btn btn-primary" onclick="showAuth('register')">Bepul boshlash</button>
+      <button class="btn btn-ghost" onclick="toggleLanguage()">
+        🌐 <span id="currentLang">UZ</span>
+      </button>
+      <button class="btn btn-ghost" onclick="toggleTheme()">
+        🌙
+      </button>
+      <a href="/discover.html" class="btn btn-ghost" style="text-decoration:none">
+        Discover
+      </a>
+      <button class="btn btn-ghost" onclick="showAuth('login')">
+        Kirish
+      </button>
+      <button class="btn btn-primary" onclick="showAuth('register')">
+        Bepul boshlash
+      </button>
     </div>
   </nav>
 
@@ -1644,7 +1656,7 @@ body { transition: background 1.2s ease; }
     <div class="feat">
       <div class="feat-icon">✦</div>
       <div class="feat-title">AI savol generatsiyasi</div>
-      <div class="feat-desc">Matn, PDF yoki rasm yuklang — AI avtomatik test savollar tuzadi. O'zbek tilida ishlaydi.</div>
+      <div class="feat-desc">Matn, PDF yoki rasm yuklang — AI avtomatik test savollar tuzadi. O'zbek, Ingliz va Rus tillarida ishlaydi.</div>
     </div>
     <div class="feat">
       <div class="feat-icon">⚡</div>
@@ -1663,13 +1675,13 @@ body { transition: background 1.2s ease; }
     </div>
     <div class="feat">
       <div class="feat-icon">🎯</div>
-      <div class="feat-title">Manual yaratish</div>
-      <div class="feat-desc">O'zingiz ham savol qo'shishingiz mumkin — AI va manual aralash</div>
+      <div class="feat-title">Qo'lda yaratish</div>
+      <div class="feat-desc">O'zingiz ham savol qo'shishingiz mumkin — AI va qo'lda yaratilgan, aralash</div>
     </div>
     <div class="feat">
       <div class="feat-icon">🏆</div>
       <div class="feat-title">Reyting tizimi</div>
-      <div class="feat-desc">Tezlik va to'g'rilik asosida ball beriladi, live leaderboard ko'rinadi</div>
+      <div class="feat-desc">Tezlik va to'g'rilik asosida ball beriladi, jonli reyting ko'rinadi</div>
     </div>
   </div>
 </div>
@@ -1721,14 +1733,22 @@ body { transition: background 1.2s ease; }
       <button class="btn btn-ghost btn-sm" onclick="showScreen('teacher')">Create Quiz</button>
     </div>
     <div class="topbar-right">
+      <button class="btn btn-ghost btn-sm" onclick="toggleLanguage()">
+        🌐 <span id="currentLang">UZ</span>
+      </button>
+
+      <button class="btn btn-ghost btn-sm" onclick="toggleTheme()">
+        🌙
+      </button>
+
       <span style="font-size:14px;color:var(--t3);font-weight:500" id="navUserName">👤</span>
+
       <button class="btn btn-ghost btn-sm" onclick="doLogout()">Chiqish</button>
     </div>
   </nav>
-
   <div class="home-body">
-    <div class="home-greet" id="homeGreet">Salom! 👋</div>
-    <div class="home-sub">Bugun nima o'qitasiz?</div>
+    <div class="home-greet" id="homeGreet">Assalamu alaikum! 👋</div>
+    <div class="home-sub">Sizni buyuk ishlar kutmoqda! Bugun nima bilan shug'ullanishni istaysiz?</div>
 
     <!-- AI HERO CARD -->
     <div class="ai-hero-card">

@@ -1,0 +1,44 @@
+.language-switcher {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--s2);
+  border: 1px solid var(--bd);
+  border-radius: 20px;
+  padding: 4px;
+}
+
+.language-btn {
+  padding: 6px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 16px;
+  color: var(--t3);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.language-btn:hover {
+  color: var(--t1);
+  background: var(--s3);
+}
+
+.language-btn--active {
+  background: var(--p);
+  color: #fff;
+}
+
+.language-btn--active:hover {
+  background: var(--p2);
+}
+
+[data-theme='light'] .language-switcher {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme='light'] .language-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+}

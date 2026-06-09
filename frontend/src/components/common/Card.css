@@ -1,0 +1,65 @@
+.card {
+  background: var(--s1);
+  border: 1px solid var(--bd);
+  border-radius: var(--r);
+  transition: all 0.2s ease;
+}
+
+.card--default {
+  background: var(--s1);
+  border-color: var(--bd);
+}
+
+.card--glass {
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  border-color: var(--bd2);
+}
+
+.card--elevated {
+  background: var(--s1);
+  border-color: var(--bd);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.card--hoverable:hover {
+  border-color: var(--bd2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+.card--clickable {
+  cursor: pointer;
+}
+
+.card--clickable:hover {
+  border-color: var(--p);
+  box-shadow: 0 4px 20px rgba(0, 170, 255, 0.2);
+}
+
+.card--padding-small {
+  padding: 12px 16px;
+}
+
+.card--padding-medium {
+  padding: 20px 24px;
+}
+
+.card--padding-large {
+  padding: 28px 32px;
+}
+
+[data-theme='light'] .card--default,
+[data-theme='light'] .card--elevated {
+  background: #fff;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme='light'] .card--glass {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme='light'] .card--elevated {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}

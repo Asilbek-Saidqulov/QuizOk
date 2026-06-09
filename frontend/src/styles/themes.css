@@ -1,0 +1,51 @@
+/* ============================================================
+   THEME-SPECIFIC STYLES
+   ============================================================ */
+
+/* Dark Theme (Default) */
+[data-theme='dark'] {
+  --bg: #060610;
+  --s1: #0b1426;
+  --s2: #111c33;
+  --s3: #18284a;
+  --bd: rgba(255, 255, 255, 0.07);
+  --bd2: rgba(255, 255, 255, 0.12);
+  --glass: rgba(12, 22, 48, 0.55);
+  --glass2: rgba(18, 32, 64, 0.72);
+  --t1: #f8fbff;
+  --t2: #9aa8c7;
+  --t3: #5f7197;
+}
+
+/* Light Theme */
+[data-theme='light'] {
+  --bg: #f8fbff;
+  --s1: #ffffff;
+  --s2: #f0f4f8;
+  --s3: #e8f0fc;
+  --bd: rgba(0, 0, 0, 0.08);
+  --bd2: rgba(0, 0, 0, 0.12);
+  --glass: rgba(255, 255, 255, 0.85);
+  --glass2: rgba(255, 255, 255, 0.95);
+  --t1: #0b1426;
+  --t2: #5f7197;
+  --t3: #9aa8c7;
+}
+
+/* Theme transition */
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Adjust overlays for light theme */
+[data-theme='light'] body::before {
+  background-image:
+    radial-gradient(circle 800px at 20% 20%, rgba(0, 170, 255, 0.05), transparent),
+    radial-gradient(circle 600px at 80% 80%, rgba(0, 229, 195, 0.04), transparent),
+    radial-gradient(circle 400px at 50% 50%, rgba(0, 229, 255, 0.02), transparent);
+}
+
+[data-theme='light'] body::after {
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+}
